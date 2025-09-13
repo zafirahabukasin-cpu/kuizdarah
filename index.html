@@ -7,24 +7,12 @@
     body { font-family: Arial, sans-serif; text-align: center; background: #f0f8ff; margin:0; }
     #intro { 
       max-width: 650px; 
-      margin: 80px auto; 
-      padding: 30px; 
-      background: #fde68a;  
+      margin: 30px auto 0 auto; 
+      padding: 15px; 
+      background: #fde68a;   /* kuning lembut */
       border-radius: 12px; 
       box-shadow: 0 3px 6px rgba(0,0,0,0.15); 
     }
-    #start-btn {
-      margin-top: 20px;
-      padding: 12px 25px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background: #3b82f6;
-      color: white;
-      transition: 0.3s;
-    }
-    #start-btn:hover { opacity: 0.85; }
     #quiz-container { 
       max-width: 650px; 
       margin: 20px auto 50px auto; 
@@ -33,46 +21,21 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
       position: relative; 
       z-index: 1; 
-      display: none; 
     }
-    h2 { margin-bottom: 20px; font-size: 1.5rem; }
-    .btn { display: block; margin: 10px auto; padding: 12px; width: 85%; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s; background: #e5e7eb; }
+    h2 { margin-bottom: 20px; }
+    .btn { display: block; margin: 10px auto; padding: 10px; width: 85%; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s; background: #e5e7eb; }
     .btn:hover { opacity: 0.85; }
     #next-btn, #restart-btn { margin-top: 20px; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; background: #333; color: white; display: none; }
     #feedback { font-weight: bold; margin-top: 15px; font-size: 18px; }
     canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-
-    /* Animasi butang */
-    .shake { animation: shake 0.5s; }
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-    }
-    .wiggle { animation: wiggle 0.4s; }
-    @keyframes wiggle {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(5deg); }
-      50% { transform: rotate(-5deg); }
-      75% { transform: rotate(5deg); }
-      100% { transform: rotate(0deg); }
-    }
-
-    @media(max-width:600px){
-      h2 { font-size: 1.2rem; }
-      .btn { font-size: 14px; padding: 10px; }
-      #start-btn { font-size: 16px; padding: 10px 20px; }
-    }
   </style>
 </head>
 <body>
   <canvas id="confetti"></canvas>
 
-  <!-- Splash page -->
+  <!-- Petak arahan -->
   <div id="intro">
     <h2>Jom jawab kuiz di bawah!<br><i>Let's answer the quiz below!</i></h2>
-    <button id="start-btn">Mula Kuiz<br><i>Start Quiz</i></button>
   </div>
 
   <!-- Petak kuiz -->
@@ -85,50 +48,57 @@
   </div>
 
   <script>
-    const questions = [
-      { question: "1. Darah terdiri daripada sel darah merah, sel darah putih, platlet dan<br><i>Blood consists of red blood cells, white blood cells, platelets and</i>",
+ const questions = [
+      {
+        question: "1. Darah terdiri daripada sel darah merah, sel darah putih, platlet dan<br><i>Blood consists of red blood cells, white blood cells, platelets and</i>",
         answers: [
           { text: "A: Nutrien<br><i>Nutrients</i>", correct: false },
           { text: "B: Plasma darah<br><i>Blood plasma</i>", correct: true },
           { text: "C: Hormon<br><i>Hormones</i>", correct: false }
         ]
       },
-      { question: "2. Apakah fungsi sel darah merah?<br><i>What is the function of red blood cells?</i>",
+      {
+        question: "2. Apakah fungsi sel darah merah?<br><i>What is the function of red blood cells?</i>",
         answers: [
           { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: false },
           { text: "B: Mengangkut oksigen<br><i>Transport oxygen</i>", correct: true },
           { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: false }
         ]
       },
-      { question: "3. Apakah fungsi sel darah putih?<br><i>What is the function of white blood cells?</i>",
+      {
+        question: "3. Apakah fungsi sel darah putih?<br><i>What is the function of white blood cells?</i>",
         answers: [
           { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: false },
           { text: "B: Mengangkut oksigen<br><i>Transport oxygen</i>", correct: false },
           { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: true }
         ]
       },
-      { question: "4. Apakah fungsi platelet?<br><i>What is the function of platelets?</i>",
+      {
+        question: "4. Apakah fungsi platelet?<br><i>What is the function of platelets?</i>",
         answers: [
           { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: true },
           { text: "B: Mengangkut oksigen<br><i>Transport oxygen</i>", correct: false },
           { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: false }
         ]
       },
-      { question: "5. Apakah fungsi plasma darah?<br><i>What is the function of blood plasma?</i>",
+      {
+        question: "5. Apakah fungsi plasma darah?<br><i>What is the function of blood plasma?</i>",
         answers: [
           { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: false },
           { text: "B: Medium pengangkutan dalam badan<br><i>Transport medium in the body</i>", correct: true },
           { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: false }
         ]
       },
-      { question: "6. Apakah komponen yang membentuk kira-kira 55% daripada isi padu darah?<br><i>Which component makes up about 55% of blood volume?</i>",
+      {
+        question: "6. Apakah komponen yang membentuk kira-kira 55% daripada isi padu darah?<br><i>Which component makes up about 55% of blood volume?</i>",
         answers: [
           { text: "A: Sel darah merah<br><i>Red blood cells</i>", correct: false },
           { text: "B: Sel darah putih<br><i>White blood cells</i>", correct: false },
           { text: "C: Plasma darah<br><i>Blood plasma</i>", correct: true }
         ]
       },
-      { question: "7. Apakah satu ciri yang membezakan sel darah putih dengan sel darah merah?<br><i>What is one characteristic that differentiates white blood cells from red blood cells?</i>",
+      {
+        question: "7. Apakah satu ciri yang membezakan sel darah putih dengan sel darah merah?<br><i>What is one characteristic that differentiates white blood cells from red blood cells?</i>",
         answers: [
           { text: "A: Kehadiran sitoplasma<br><i>Presence of cytoplasm</i>", correct: false },
           { text: "B: Kehadiran nukleus<br><i>Presence of nucleus</i>", correct: true },
@@ -144,11 +114,9 @@
     const restartButton = document.getElementById("restart-btn");
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
-    const intro = document.getElementById("intro");
-    const startBtn = document.getElementById("start-btn");
-    const quizContainer = document.getElementById("quiz-container");
 
     let currentQuestionIndex = 0;
+    let score = 0;
     let answeredCorrectly = false;
     let confettiPieces = [];
 
@@ -178,4 +146,135 @@
       confettiPieces.forEach(p => {
         ctx.beginPath();
         ctx.fillStyle = p.color;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
+        ctx.fill();
+      });
+      updateConfetti();
+    }
+
+    function updateConfetti() {
+      confettiPieces.forEach(p => {
+        p.y += p.d * 0.3;
+        if (p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    function startConfetti() {
+      createConfetti();
+      function animate() {
+        drawConfetti();
+        requestAnimationFrame(animate);
+      }
+      animate();
+      setTimeout(() => { confettiPieces = []; ctx.clearRect(0,0,canvas.width,canvas.height); }, 5000);
+    }
+
+    function playSound(type) {
+      const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctxAudio.createOscillator();
+      const gain = ctxAudio.createGain();
+      osc.connect(gain);
+      gain.connect(ctxAudio.destination);
+
+      if (type === "correct") {
+        osc.frequency.value = 800;
+        gain.gain.value = 0.2;
+        osc.start();
+        osc.stop(ctxAudio.currentTime + 0.2);
+      } else if (type === "wrong") {
+        osc.frequency.value = 150;
+        gain.gain.value = 0.3;
+        osc.start();
+        osc.stop(ctxAudio.currentTime + 0.4);
+      }
+    }
+
+    function startQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      feedback.innerHTML = "";
+      nextButton.style.display = "none";
+      restartButton.style.display = "none";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      resetState();
+      let currentQuestion = questions[currentQuestionIndex];
+      questionElement.innerHTML = currentQuestion.question;
+
+      const colors = ["#fef3c7","#e0f2fe","#fce7f3","#dcfce7","#ede9fe","#fff1f2","#e2e8f0"];
+      document.getElementById("quiz-container").style.background = colors[currentQuestionIndex % colors.length];
+
+      answeredCorrectly = false;
+
+      currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerHTML = answer.text;
+        button.classList.add("btn");
+        button.onclick = () => selectAnswer(button, answer);
+        answerButtons.appendChild(button);
+      });
+    }
+
+    function resetState() {
+      nextButton.style.display = "none";
+      feedback.innerHTML = "";
+      while (answerButtons.firstChild) {
+        answerButtons.removeChild(answerButtons.firstChild);
+      }
+    }
+
+    function selectAnswer(button, answer) {
+      if (answeredCorrectly) return;
+
+      if (answer.correct) {
+        button.style.background = "#22c55e";
+        feedback.innerHTML = "✅ Betul 👍";
+        score++;
+        answeredCorrectly = true;
+        disableAllButtons();
+        nextButton.style.display = "block";
+        playSound("correct");
+        button.classList.add("shake");
+        setTimeout(() => button.classList.remove("shake"), 500);
+      } else {
+        button.style.background = "#ef4444";
+        feedback.innerHTML = "❌ Salah ❌ Cuba lagi!";
+        button.disabled = true;
+        playSound("wrong");
+        button.classList.add("wiggle");
+        setTimeout(() => button.classList.remove("wiggle"), 500);
+      }
+    }
+
+    function disableAllButtons() {
+      const buttons = answerButtons.children;
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+      }
+    }
+
+    nextButton.addEventListener("click", () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showQuestion();
+      } else {
+        questionElement.innerHTML = `Tahniah! Anda telah tamat kuiz 🎉<br><i>Congratulations! You have completed the quiz 🎉</i><br><br></i>`;
+        answerButtons.innerHTML = "";
+        feedback.innerHTML = "";
+        nextButton.style.display = "none";
+        restartButton.style.display = "block";
+        startConfetti();
+      }
+    });
+
+    restartButton.addEventListener("click", startQuiz);
+
+    startQuiz();
+  </script>
+</body>
+</html>
