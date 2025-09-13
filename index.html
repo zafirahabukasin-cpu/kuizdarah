@@ -9,7 +9,7 @@
       max-width: 650px; 
       margin: 80px auto; 
       padding: 30px; 
-      background: #fde68a;   /* kuning lembut */
+      background: #fde68a;  
       border-radius: 12px; 
       box-shadow: 0 3px 6px rgba(0,0,0,0.15); 
     }
@@ -33,7 +33,7 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
       position: relative; 
       z-index: 1; 
-      display: none; /* mula-mula sembunyi */
+      display: none; 
     }
     h2 { margin-bottom: 20px; font-size: 1.5rem; }
     .btn { display: block; margin: 10px auto; padding: 12px; width: 85%; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s; background: #e5e7eb; }
@@ -149,7 +149,6 @@
     const quizContainer = document.getElementById("quiz-container");
 
     let currentQuestionIndex = 0;
-    let score = 0;
     let answeredCorrectly = false;
     let confettiPieces = [];
 
@@ -230,7 +229,6 @@
       quizContainer.style.display = "block";
 
       currentQuestionIndex = 0;
-      score = 0;
       feedback.innerHTML = "";
       nextButton.style.display = "none";
       restartButton.style.display = "none";
@@ -270,8 +268,7 @@
 
       if (answer.correct) {
         button.style.background = "#22c55e";
-        feedback.innerHTML = `✅ Betul 👍 Skor: ${score+1}`;
-        score++;
+        feedback.innerHTML = `✅ Betul 👍`;
         answeredCorrectly = true;
         disableAllButtons();
         nextButton.style.display = "block";
@@ -302,7 +299,7 @@
       } else {
         questionElement.innerHTML = `Tahniah! Anda telah tamat kuiz 🎉<br><i>Congratulations! You have completed the quiz 🎉</i>`;
         answerButtons.innerHTML = "";
-        feedback.innerHTML = `Skor akhir anda: ${score} daripada ${questions.length}`;
+        feedback.innerHTML = "";
         nextButton.style.display = "none";
         restartButton.style.display = "block";
         startConfetti();
