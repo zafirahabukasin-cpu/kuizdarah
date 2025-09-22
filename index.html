@@ -1,314 +1,534 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Kuiz Interaktif Darah</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #f0f8ff; margin:0; }
-    #intro { 
-      max-width: 650px; 
-      margin: 80px auto; 
-      padding: 30px; 
-      background: #fde68a;   
-      border-radius: 12px; 
-      box-shadow: 0 3px 6px rgba(0,0,0,0.15); 
-    }
-    #start-btn {
-      margin-top: 20px;
-      padding: 12px 25px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background: #3b82f6;
-      color: white;
-      transition: 0.3s;
-    }
-    #start-btn:hover { opacity: 0.85; }
-    #quiz-container { 
-      max-width: 650px; 
-      margin: 20px auto 50px auto; 
-      padding: 20px; 
-      border-radius: 15px; 
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
-      position: relative; 
-      z-index: 1; 
-      display: none; 
-    }
-    h2 { margin-bottom: 20px; font-size: 1.5rem; }
-    .btn { display: block; margin: 10px auto; padding: 12px; width: 85%; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s; background: #e5e7eb; }
-    .btn:hover { opacity: 0.85; }
-    #next-btn, #restart-btn { margin-top: 20px; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; background: #333; color: white; display: none; }
-    #feedback { font-weight: bold; margin-top: 15px; font-size: 18px; }
-    canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Mata - Terang dan Gelap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .shake { animation: shake 0.5s; }
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-    }
-    .wiggle { animation: wiggle 0.4s; }
-    @keyframes wiggle {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(5deg); }
-      50% { transform: rotate(-5deg); }
-      75% { transform: rotate(5deg); }
-      100% { transform: rotate(0deg); }
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.8s ease;
+        }
 
-    @media(max-width:600px){
-      h2 { font-size: 1.2rem; }
-      .btn { font-size: 14px; padding: 10px; }
-      #start-btn { font-size: 16px; padding: 10px 20px; }
-    }
-  </style>
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .language-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid #4a90e2;
+            background: transparent;
+            color: #4a90e2;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .lang-btn.active {
+            background: #4a90e2;
+            color: white;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .eye-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            gap: 60px;
+            position: relative;
+        }
+
+        .eye-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .environment-box {
+            width: 520px;
+            height: 140px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            transition: all 0.8s ease;
+            border: 3px solid #333;
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .environment-box.bright {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .environment-box.dark {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            box-shadow: 0 0 20px rgba(44, 62, 80, 0.5);
+        }
+
+        .eye {
+            width: 200px;
+            height: 120px;
+            background: white;
+            border-radius: 100px 100px 100px 100px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            border: 3px solid #333;
+            z-index: 2;
+        }
+
+        .iris {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #4a90e2 0%, #2c5aa0 70%, #1a365d 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.8s ease;
+        }
+
+        .pupil {
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.8s ease;
+        }
+
+        .pupil.bright {
+            width: 20px;
+            height: 20px;
+        }
+
+        .pupil.dark {
+            width: 60px;
+            height: 60px;
+        }
+
+        .highlight {
+            width: 15px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            top: 25%;
+            left: 30%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-bright {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+        }
+
+        .btn-bright:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-dark {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            color: white;
+        }
+
+        .btn-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+        }
+
+        .info {
+            background: rgba(74, 144, 226, 0.1);
+            border-left: 4px solid #4a90e2;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .info h3 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .info p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.5s ease;
+        }
+
+        .status.bright {
+            background: rgba(255, 215, 0, 0.2);
+            color: #b8860b;
+            border: 2px solid #ffd700;
+        }
+
+        .status.dark {
+            background: rgba(44, 62, 80, 0.2);
+            color: #2c3e50;
+            border: 2px solid #34495e;
+        }
+
+        /* Environment effects */
+        body.bright-env {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+        }
+
+        body.dark-env {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+        }
+
+        body.bright-env .container {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        body.dark-env .container {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .eye-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .eye {
+                width: 160px;
+                height: 100px;
+            }
+            
+            .iris {
+                width: 65px;
+                height: 65px;
+            }
+            
+            .environment-box {
+                width: 380px;
+                height: 120px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <canvas id="confetti"></canvas>
+    <div class="container">
+        <div class="language-toggle">
+            <button class="lang-btn active" onclick="setLanguage('ms')" id="lang-ms">BM</button>
+            <button class="lang-btn" onclick="setLanguage('en')" id="lang-en">EN</button>
+        </div>
+        
+        <h1 id="main-title">Simulasi Pupil pada Mata</h1>
+        <p class="subtitle" id="subtitle">Lihat bagaimana pupil pada mata bertindak balas terhadap perubahan cahaya</p>
+        
+        <div class="eye-container">
+            <div class="environment-box bright" id="env-box"></div>
+            <div class="eye-wrapper">
+                <div class="eye">
+                    <div class="iris">
+                        <div class="pupil bright" id="pupil1">
+                            <div class="highlight"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="eye-wrapper">
+                <div class="eye">
+                    <div class="iris">
+                        <div class="pupil bright" id="pupil2">
+                            <div class="highlight"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <div id="intro">
-    <h2>Jom jawab kuiz di bawah!<br><i>Let's answer the quiz below!</i></h2>
-    <button id="start-btn">Mula Kuiz<br><i>Start Quiz</i></button>
-  </div>
+        <div class="status bright" id="status">
+            ☀️ Tempat Terang - Pupil Mengecil
+        </div>
 
-  <div id="quiz-container">
-    <h2 id="question">Soalan akan dipaparkan di sini</h2>
-    <div id="answer-buttons"></div>
-    <div id="feedback"></div>
-    <button id="next-btn">Soalan Seterusnya<br><i>Next Question</i></button>
-    <button id="restart-btn">Mula Semula<br><i>Restart</i></button>
-  </div>
+        <div class="controls">
+            <button class="btn btn-bright" onclick="setBrightEnvironment()" id="btn-bright">
+                ☀️ Tempat Terang
+            </button>
+            <button class="btn btn-dark" onclick="setDarkEnvironment()" id="btn-dark">
+                🌙 Tempat Gelap
+            </button>
+        </div>
 
-  <script>
-    const questions = [
-      { question: "1. Darah terdiri daripada sel darah merah, sel darah putih, platlet dan<br><i>Blood consists of red blood cells, white blood cells, platelets and</i>",
-        answers: [
-          { text: "A: Nutrien<br><i>Nutrients</i>", correct: false },
-          { text: "B: Plasma darah<br><i>Blood plasma</i>", correct: true },
-          { text: "C: Hormon<br><i>Hormones</i>", correct: false }
-        ]
-      },
-      { question: "2. Apakah fungsi sel darah merah?<br><i>What is the function of red blood cells?</i>",
-        answers: [
-          { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: false },
-          { text: "B: Mengangkut oksigen<br><i>Transport oxygen</i>", correct: true },
-          { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: false }
-        ]
-      },
-      { question: "3. Apakah fungsi sel darah putih?<br><i>What is the function of white blood cells?</i>",
-        answers: [
-          { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: false },
-          { text: "B: Mengangkut oksigen<br><i>Transport oxygen</i>", correct: false },
-          { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: true }
-        ]
-      },
-      { question: "4. Apakah fungsi platelet?<br><i>What is the function of platelets?</i>",
-        answers: [
-          { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: true },
-          { text: "B: Mengangkut oksigen<br><i>Transport oxygen</i>", correct: false },
-          { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: false }
-        ]
-      },
-      { question: "5. Apakah fungsi plasma darah?<br><i>What is the function of blood plasma?</i>",
-        answers: [
-          { text: "A: Membantu pembekuan darah<br><i>Help blood clotting</i>", correct: false },
-          { text: "B: Medium pengangkutan dalam badan<br><i>Transport medium in the body</i>", correct: true },
-          { text: "C: Melindungi badan daripada penyakit<br><i>Protect the body from diseases</i>", correct: false }
-        ]
-      },
-      { question: "6. Apakah komponen yang membentuk kira-kira 55% daripada isi padu darah?<br><i>Which component makes up about 55% of blood volume?</i>",
-        answers: [
-          { text: "A: Sel darah merah<br><i>Red blood cells</i>", correct: false },
-          { text: "B: Sel darah putih<br><i>White blood cells</i>", correct: false },
-          { text: "C: Plasma darah<br><i>Blood plasma</i>", correct: true }
-        ]
-      },
-      { question: "7. Apakah satu ciri yang membezakan sel darah putih dengan sel darah merah?<br><i>What is one characteristic that differentiates white blood cells from red blood cells?</i>",
-        answers: [
-          { text: "A: Kehadiran sitoplasma<br><i>Presence of cytoplasm</i>", correct: false },
-          { text: "B: Kehadiran nukleus<br><i>Presence of nucleus</i>", correct: true },
-          { text: "C: Kehadiran dinding sel<br><i>Presence of cell wall</i>", correct: false }
-        ]
-      }
-    ];
+        <div class="info">
+            <h3 id="info-title">Bagaimana Pupil pada Mata Berfungsi?</h3>
+            <p id="info-bright"><strong id="bright-label">Di tempat terang:</strong> <span id="bright-desc">Pupil mengecil untuk melindungi retina daripada cahaya berlebihan dan memberikan penglihatan yang tajam.</span></p>
+            <p id="info-dark"><strong id="dark-label">Di tempat gelap:</strong> <span id="dark-desc">Pupil membesar untuk membenarkan lebih banyak cahaya masuk supaya kita boleh melihat dalam keadaan cahaya minimum.</span></p>
+            <p id="info-process"><strong id="process-label">Proses ini:</strong> <span id="process-desc">Dikawal oleh otot iris secara automatik dan berlaku dalam beberapa saat sebagai tindak balas terhadap perubahan intensiti cahaya.</span></p>
+        </div>
+    </div>
 
-    const questionElement = document.getElementById("question");
-    const answerButtons = document.getElementById("answer-buttons");
-    const feedback = document.getElementById("feedback");
-    const nextButton = document.getElementById("next-btn");
-    const restartButton = document.getElementById("restart-btn");
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
-    const intro = document.getElementById("intro");
-    const startBtn = document.getElementById("start-btn");
-    const quizContainer = document.getElementById("quiz-container");
+    <script>
+        let currentLanguage = 'ms';
+        
+        const translations = {
+            ms: {
+                title: 'Simulasi Pupil pada Mata',
+                subtitle: 'Lihat bagaimana pupil pada mata bertindak balas terhadap perubahan cahaya',
+                btnBright: '☀️ Tempat Terang',
+                btnDark: '🌙 Tempat Gelap',
+                statusBright: '☀️ Tempat Terang - Pupil Mengecil',
+                statusDark: '🌙 Tempat Gelap - Pupil Membesar',
+                envBright: '☀️ TERANG',
+                envDark: '🌙 GELAP',
+                infoTitle: 'Bagaimana Pupil pada Mata Berfungsi?',
+                brightLabel: 'Di tempat terang:',
+                brightDesc: 'Pupil mengecil (konstriksi) untuk melindungi retina daripada cahaya berlebihan dan memberikan penglihatan yang tajam.',
+                darkLabel: 'Di tempat gelap:',
+                darkDesc: 'Pupil membesar (dilatasi) untuk membenarkan lebih banyak cahaya masuk supaya kita boleh melihat dalam keadaan cahaya minimum.',
+                processLabel: 'Proses ini:',
+                processDesc: 'Dikawal oleh otot iris secara automatik dan berlaku dalam beberapa saat sebagai tindak balas terhadap perubahan intensiti cahaya.'
+            },
+            en: {
+                title: 'Eye Pupil Simulation',
+                subtitle: 'See how the pupils in the eyes respond to changes in light',
+                btnBright: '☀️ Bright Places',
+                btnDark: '🌙 Dark Places',
+                statusBright: '☀️ Bright Places - Pupils Constrict',
+                statusDark: '🌙 Dark Places - Pupils Dilate',
+                envBright: '☀️ BRIGHT',
+                envDark: '🌙 DARK',
+                infoTitle: 'How Do Eye Pupils Function?',
+                brightLabel: 'In bright places:',
+                brightDesc: 'Pupils constrict to protect the retina from excessive light and provide sharp vision.',
+                darkLabel: 'In dark places:',
+                darkDesc: 'Pupils dilate to allow more light to enter so we can see in minimal light conditions.',
+                processLabel: 'This process:',
+                processDesc: 'Is controlled by the iris muscles automatically and occurs within seconds as a response to changes in light intensity.'
+            }
+        };
 
-    let currentQuestionIndex = 0;
-    let answeredCorrectly = false;
-    let confettiPieces = [];
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    function createConfetti() {
-      confettiPieces = [];
-      for (let i = 0; i < 150; i++) {
-        confettiPieces.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height - canvas.height,
-          r: Math.random() * 6 + 4,
-          d: Math.random() * 10 + 10,
-          color: `hsl(${Math.random() * 360},100%,50%)`,
-          tilt: Math.random() * 10 - 10
-        });
-      }
-    }
-
-    function drawConfetti() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      confettiPieces.forEach(p => {
-        ctx.beginPath();
-        ctx.fillStyle = p.color;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
-        ctx.fill();
-      });
-      updateConfetti();
-    }
-
-    function updateConfetti() {
-      confettiPieces.forEach(p => {
-        p.y += p.d * 0.3;
-        if (p.y > canvas.height) {
-          p.y = -10;
-          p.x = Math.random() * canvas.width;
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+            
+            // Update all text content
+            const t = translations[lang];
+            document.getElementById('main-title').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('btn-bright').innerHTML = t.btnBright;
+            document.getElementById('btn-dark').innerHTML = t.btnDark;
+            document.getElementById('info-title').textContent = t.infoTitle;
+            document.getElementById('bright-label').textContent = t.brightLabel;
+            document.getElementById('bright-desc').textContent = t.brightDesc;
+            document.getElementById('dark-label').textContent = t.darkLabel;
+            document.getElementById('dark-desc').textContent = t.darkDesc;
+            document.getElementById('process-label').textContent = t.processLabel;
+            document.getElementById('process-desc').textContent = t.processDesc;
+            
+            // Update environment boxes
+            updateEnvironmentBoxes();
+            
+            // Update status based on current state
+            updateStatus();
         }
-      });
-    }
 
-    function startConfetti() {
-      createConfetti();
-      function animate() {
-        drawConfetti();
-        requestAnimationFrame(animate);
-      }
-      animate();
-      setTimeout(() => { confettiPieces = []; ctx.clearRect(0,0,canvas.width,canvas.height); }, 5000);
-    }
+        function updateStatus() {
+            const status = document.getElementById('status');
+            const t = translations[currentLanguage];
+            
+            if (status.classList.contains('bright')) {
+                status.innerHTML = t.statusBright;
+            } else {
+                status.innerHTML = t.statusDark;
+            }
+        }
 
-    function playSound(type) {
-      const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctxAudio.createOscillator();
-      const gain = ctxAudio.createGain();
-      osc.connect(gain);
-      gain.connect(ctxAudio.destination);
+        function updateEnvironmentBoxes() {
+            // Environment box now has no text content
+        }
 
-      if (type === "correct") {
-        osc.frequency.value = 800;
-        gain.gain.value = 0.2;
-        osc.start();
-        osc.stop(ctxAudio.currentTime + 0.2);
-      } else if (type === "wrong") {
-        osc.frequency.value = 150;
-        gain.gain.value = 0.3;
-        osc.start();
-        osc.stop(ctxAudio.currentTime + 0.4);
-      }
-    }
+        function setBrightEnvironment() {
+            // Change pupils to small size
+            const pupils = document.querySelectorAll('.pupil');
+            pupils.forEach(pupil => {
+                pupil.classList.remove('dark');
+                pupil.classList.add('bright');
+            });
 
-    function startQuiz() {
-      intro.style.display = "none";
-      quizContainer.style.display = "block";
+            // Change environment
+            document.body.classList.remove('dark-env');
+            document.body.classList.add('bright-env');
 
-      currentQuestionIndex = 0;
-      feedback.innerHTML = "";
-      nextButton.style.display = "none";
-      restartButton.style.display = "none";
+            // Update status
+            const status = document.getElementById('status');
+            status.classList.remove('dark');
+            status.classList.add('bright');
+            
+            // Update environment boxes
+            const envBoxes = document.querySelectorAll('.environment-box');
+            envBoxes.forEach(box => {
+                box.classList.remove('dark');
+                box.classList.add('bright');
+            });
+            
+            updateStatus();
+            updateEnvironmentBoxes();
+        }
 
-      showQuestion();
-    }
+        function setDarkEnvironment() {
+            // Change pupils to large size
+            const pupils = document.querySelectorAll('.pupil');
+            pupils.forEach(pupil => {
+                pupil.classList.remove('bright');
+                pupil.classList.add('dark');
+            });
 
-    function showQuestion() {
-      resetState();
-      let currentQuestion = questions[currentQuestionIndex];
-      questionElement.innerHTML = currentQuestion.question;
+            // Change environment
+            document.body.classList.remove('bright-env');
+            document.body.classList.add('dark-env');
 
-      const colors = ["#fef3c7","#e0f2fe","#fce7f3","#dcfce7","#ede9fe","#fff1f2","#e2e8f0"];
-      quizContainer.style.background = colors[currentQuestionIndex % colors.length];
+            // Update status
+            const status = document.getElementById('status');
+            status.classList.remove('bright');
+            status.classList.add('dark');
+            
+            // Update environment boxes
+            const envBoxes = document.querySelectorAll('.environment-box');
+            envBoxes.forEach(box => {
+                box.classList.remove('bright');
+                box.classList.add('dark');
+            });
+            
+            updateStatus();
+            updateEnvironmentBoxes();
+        }
 
-      answeredCorrectly = false;
+        // Auto demonstration
+        let autoDemo = true;
+        let currentState = 'bright';
 
-      currentQuestion.answers.forEach(answer => {
-        const button = document.createElement("button");
-        button.innerHTML = answer.text;
-        button.classList.add("btn");
-        button.onclick = () => selectAnswer(button, answer);
-        answerButtons.appendChild(button);
-      });
-    }
+        function autoDemonstration() {
+            if (autoDemo) {
+                setTimeout(() => {
+                    if (currentState === 'bright') {
+                        setDarkEnvironment();
+                        currentState = 'dark';
+                    } else {
+                        setBrightEnvironment();
+                        currentState = 'bright';
+                    }
+                    autoDemonstration();
+                }, 4000);
+            }
+        }
 
-    function resetState() {
-      nextButton.style.display = "none";
-      feedback.innerHTML = "";
-      while (answerButtons.firstChild) {
-        answerButtons.removeChild(answerButtons.firstChild);
-      }
-    }
+        // Start auto demo
+        setTimeout(() => {
+            autoDemonstration();
+        }, 2000);
 
-    function selectAnswer(button, answer) {
-      if (answeredCorrectly) return;
-
-      if (answer.correct) {
-        button.style.background = "#22c55e";
-        feedback.innerHTML = `✅ Betul 👍`;
-        answeredCorrectly = true;
-        disableAllButtons();
-        nextButton.style.display = "block";
-        playSound("correct");
-        button.classList.add("shake");
-        setTimeout(() => button.classList.remove("shake"), 500);
-      } else {
-        button.style.background = "#ef4444";
-        feedback.innerHTML = "❌ Salah ❌ Cuba lagi!";
-        button.disabled = true;
-        playSound("wrong");
-        button.classList.add("wiggle");
-        setTimeout(() => button.classList.remove("wiggle"), 500);
-      }
-    }
-
-    function disableAllButtons() {
-      const buttons = answerButtons.children;
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].disabled = true;
-      }
-    }
-
-    nextButton.addEventListener("click", () => {
-      currentQuestionIndex++;
-      if (currentQuestionIndex < questions.length) {
-        showQuestion();
-      } else {
-        questionElement.innerHTML = `Tahniah! Anda telah tamat kuiz 🎉<br><i>Congratulations! You have completed the quiz 🎉</i>`;
-        answerButtons.innerHTML = "";
-        feedback.innerHTML = "";
-        nextButton.style.display = "none";
-        restartButton.style.display = "block";
-        startConfetti();
-      }
-    });
-
-    restartButton.addEventListener("click", () => {
-      intro.style.display = "block";
-      quizContainer.style.display = "none";
-    });
-
-    startBtn.addEventListener("click", startQuiz);
-  </script>
-</body>
+        // Stop auto demo when user interacts
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                autoDemo = false;
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98161ed7b7138177',t:'MTc1ODI1Mzg0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
