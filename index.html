@@ -1,592 +1,813 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi Mata - Terang dan Gelap</title>
+    <title>Kuiz Hormon Interaktif</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            margin: 0;
             padding: 20px;
-            transition: all 0.8s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: calc(20px * var(--scale-factor));
-            padding: calc(40px * var(--scale-factor));
-            box-shadow: 0 calc(20px * var(--scale-factor)) calc(40px * var(--scale-factor)) rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 600px;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            container-type: inline-size;
-            --scale-factor: 1;
-            resize: both;
-            overflow: auto;
-            min-width: calc(300px + 100px * var(--scale-factor));
-            min-height: 400px;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+            animation: floatingNoise 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes floatingNoise {
+            0%, 100% {
+                transform: translateX(0px) translateY(0px) rotate(0deg);
+                opacity: 1;
+            }
+            33% {
+                transform: translateX(30px) translateY(-30px) rotate(0.5deg);
+                opacity: 0.8;
+            }
+            66% {
+                transform: translateX(-20px) translateY(20px) rotate(-0.5deg);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes vibrate {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-3px) rotate(-1deg); }
+            50% { transform: translateX(3px) rotate(1deg); }
+            75% { transform: translateX(-2px) rotate(-0.5deg); }
+            100% { transform: translateX(0) rotate(0deg); }
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .quiz-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .quiz-header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
         }
 
         .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: calc(20px * var(--scale-factor));
-            gap: calc(5px * var(--scale-factor));
+            gap: 5px;
         }
 
         .lang-btn {
-            padding: calc(8px * var(--scale-factor)) calc(16px * var(--scale-factor));
-            border: calc(2px * var(--scale-factor)) solid #4a90e2;
-            background: transparent;
-            color: #4a90e2;
-            border-radius: calc(20px * var(--scale-factor));
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
         }
 
         .lang-btn:hover {
-            background: rgba(74, 144, 226, 0.1);
+            background: rgba(255,255,255,0.3);
         }
 
         .lang-btn.active {
-            background: #4a90e2;
-            color: white;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-
-        .eye-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: calc(40px * var(--scale-factor)) 0;
-            gap: calc(60px * var(--scale-factor));
-            position: relative;
-            flex-wrap: nowrap;
-            overflow: visible;
-        }
-
-        .eye-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-
-        .environment-box {
-            width: calc(100% - 40px * var(--scale-factor));
-            min-width: calc((200px * 2 + 60px + 80px) * var(--scale-factor));
-            height: calc(140px * var(--scale-factor));
-            border-radius: calc(20px * var(--scale-factor));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: calc(1.3rem * var(--scale-factor));
-            transition: all 0.8s ease;
-            border: calc(3px * var(--scale-factor)) solid #333;
-            position: absolute;
-            z-index: 1;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .environment-box.bright {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #333;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-
-        .environment-box.dark {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            box-shadow: 0 0 20px rgba(44, 62, 80, 0.5);
-        }
-
-        .eye {
-            width: calc(200px * var(--scale-factor));
-            height: calc(120px * var(--scale-factor));
             background: white;
-            border-radius: calc(100px * var(--scale-factor)) calc(100px * var(--scale-factor)) calc(100px * var(--scale-factor)) calc(100px * var(--scale-factor));
-            position: relative;
-            box-shadow: inset 0 0 calc(20px * var(--scale-factor)) rgba(0, 0, 0, 0.1);
-            border: calc(3px * var(--scale-factor)) solid #333;
-            z-index: 2;
+            color: #4facfe;
         }
 
-        .iris {
-            width: calc(80px * var(--scale-factor));
-            height: calc(80px * var(--scale-factor));
-            background: radial-gradient(circle, #4a90e2 0%, #2c5aa0 70%, #1a365d 100%);
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: all 0.8s ease;
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
         }
 
-        .pupil {
-            background: #000;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: all 0.8s ease;
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
         }
 
-        .pupil.bright {
-            width: calc(20px * var(--scale-factor));
-            height: calc(20px * var(--scale-factor));
+        .question-container {
+            padding: 40px;
+            display: none;
         }
 
-        .pupil.dark {
-            width: calc(60px * var(--scale-factor));
-            height: calc(60px * var(--scale-factor));
+        .question-container.active {
+            display: block;
         }
 
-        .highlight {
-            width: calc(15px * var(--scale-factor));
-            height: calc(15px * var(--scale-factor));
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            position: absolute;
-            top: 25%;
-            left: 30%;
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
         }
 
-        .controls {
+        .question-text {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            color: #2d3748;
+        }
+
+        .hormone-name {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            background: #edf2f7;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            animation: vibrate 0.4s ease-in-out;
+        }
+
+        .option.correct {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+            animation: correctPulse 0.6s ease-in-out;
+        }
+
+        .option.incorrect {
+            background: #f56565;
+            color: white;
+            border-color: #f56565;
+            animation: incorrectShake 0.6s ease-in-out;
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+
+        .nav-buttons {
             display: flex;
-            gap: calc(20px * var(--scale-factor));
-            justify-content: center;
-            margin: calc(30px * var(--scale-factor)) 0;
+            justify-content: space-between;
+            margin-top: 30px;
         }
 
         .btn {
-            padding: calc(15px * var(--scale-factor)) calc(30px * var(--scale-factor));
+            padding: 12px 30px;
             border: none;
-            border-radius: calc(50px * var(--scale-factor));
-            font-size: calc(1.1rem * var(--scale-factor));
+            border-radius: 25px;
+            font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 calc(5px * var(--scale-factor)) calc(15px * var(--scale-factor)) rgba(0, 0, 0, 0.2);
         }
 
-        .btn-bright {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #333;
-        }
-
-        .btn-bright:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
-        }
-
-        .btn-dark {
-            background: linear-gradient(45deg, #2c3e50, #34495e);
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
         }
 
-        .btn-dark:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        .info {
-            background: rgba(74, 144, 226, 0.1);
-            border-left: calc(4px * var(--scale-factor)) solid #4a90e2;
-            padding: calc(20px * var(--scale-factor));
-            margin: calc(30px * var(--scale-factor)) 0;
-            border-radius: calc(8px * var(--scale-factor));
-            text-align: left;
+        .btn-primary:active {
+            animation: vibrate 0.2s ease-in-out;
         }
 
-        .info h3 {
-            color: #2c5aa0;
-            margin-bottom: calc(10px * var(--scale-factor));
-            font-size: calc(1.3rem * var(--scale-factor));
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
         }
 
-        .info p {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: calc(10px * var(--scale-factor));
+        .btn-secondary:hover {
+            background: #cbd5e0;
         }
 
-        .status {
-            font-size: calc(1.2rem * var(--scale-factor));
-            font-weight: 600;
-            margin: calc(20px * var(--scale-factor)) 0;
-            padding: calc(15px * var(--scale-factor));
-            border-radius: calc(10px * var(--scale-factor));
-            transition: all 0.5s ease;
+        .btn-secondary:active {
+            animation: vibrate 0.2s ease-in-out;
         }
 
-        .status.bright {
-            background: rgba(255, 215, 0, 0.2);
-            color: #b8860b;
-            border: 2px solid #ffd700;
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .status.dark {
-            background: rgba(44, 62, 80, 0.2);
-            color: #2c3e50;
-            border: 2px solid #34495e;
+        .results {
+            text-align: center;
+            padding: 40px;
+            display: none;
         }
 
-        /* Environment effects */
-        body.bright-env {
-            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 2.5em;
+            font-weight: bold;
         }
 
-        body.dark-env {
-            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+        .results h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #2d3748;
         }
 
-        body.bright-env .container {
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
-        }
-
-        body.dark-env .container {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Container Query Rules for Responsive Scaling */
-        @container (max-width: 500px) {
-            .container {
-                --scale-factor: 0.8;
-            }
-        }
-
-        @container (max-width: 400px) {
-            .container {
-                --scale-factor: 0.6;
-            }
-        }
-
-        @container (max-width: 300px) {
-            .container {
-                --scale-factor: 0.5;
-            }
-        }
-
-        @container (min-width: 700px) {
-            .container {
-                --scale-factor: 1.2;
-            }
-        }
-
-        @container (min-width: 800px) {
-            .container {
-                --scale-factor: 1.4;
-            }
+        .results p {
+            font-size: 1.2em;
+            color: #4a5568;
+            margin-bottom: 30px;
         }
 
         @media (max-width: 768px) {
-            .controls {
-                flex-direction: column;
-                align-items: center;
+            .quiz-container {
+                margin: 10px;
+                border-radius: 15px;
             }
             
-            h1 {
-                font-size: 2rem;
+            .quiz-header {
+                padding: 20px;
             }
             
-            .eye {
-                width: calc(160px * var(--scale-factor));
-                height: calc(100px * var(--scale-factor));
+            .quiz-header h1 {
+                font-size: 2em;
             }
             
-            .iris {
-                width: calc(65px * var(--scale-factor));
-                height: calc(65px * var(--scale-factor));
-            }
-            
-            .environment-box {
-                width: calc(100% - 20px * var(--scale-factor));
-                min-width: calc((160px * 2 + 40px + 60px) * var(--scale-factor));
-                height: calc(120px * var(--scale-factor));
-                font-size: calc(1.1rem * var(--scale-factor));
+            .question-container {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="language-toggle">
-            <button class="lang-btn active" onclick="setLanguage('ms')" id="lang-ms">BM</button>
-            <button class="lang-btn" onclick="setLanguage('en')" id="lang-en">EN</button>
-        </div>
-        
-        <h1 id="main-title">Simulasi Pupil pada Mata</h1>
-        <p class="subtitle" id="subtitle">Lihat bagaimana pupil pada mata bertindak balas terhadap perubahan cahaya</p>
-        
-        <div class="eye-container">
-            <div class="environment-box bright" id="env-box"></div>
-            <div class="eye-wrapper">
-                <div class="eye">
-                    <div class="iris">
-                        <div class="pupil bright" id="pupil1">
-                            <div class="highlight"></div>
-                        </div>
-                    </div>
-                </div>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="language-toggle">
+                <button class="lang-btn active" onclick="switchLanguage('ms')">BM</button>
+                <button class="lang-btn" onclick="switchLanguage('en')">EN</button>
             </div>
-            <div class="eye-wrapper">
-                <div class="eye">
-                    <div class="iris">
-                        <div class="pupil bright" id="pupil2">
-                            <div class="highlight"></div>
-                        </div>
-                    </div>
-                </div>
+            <h1 id="mainTitle">🧬 Kuiz Hormon</h1>
+            <p id="mainSubtitle">Uji pengetahuan anda tentang kesan berlebihan dan kekurangan hormon</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
 
-        <div class="status bright" id="status">
-            ☀️ Tempat Terang - Pupil Mengecil
+        <!-- Soalan 1 -->
+        <div class="question-container active" id="question1">
+            <div class="question-number" id="qnum1">Soalan 1 daripada 8</div>
+            <div class="question-text" id="qtext1">
+                Apakah kesan berlebihan yang betul bagi hormon berikut:<br>
+                <strong>1. Hormon pertumbuhan?</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="correct" id="q1opt1">Akromegali (Kegergasian)</div>
+                <div class="option" data-answer="incorrect" id="q1opt2">Kekerdilan</div>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" disabled id="prev1">Sebelumnya</button>
+                <button class="btn btn-primary" id="next1" onclick="nextQuestion(1)" disabled>Seterusnya</button>
+            </div>
         </div>
 
-        <div class="controls">
-            <button class="btn btn-bright" onclick="setBrightEnvironment()" id="btn-bright">
-                ☀️ Tempat Terang
-            </button>
-            <button class="btn btn-dark" onclick="setDarkEnvironment()" id="btn-dark">
-                🌙 Tempat Gelap
-            </button>
+        <!-- Soalan 2 -->
+        <div class="question-container" id="question2">
+            <div class="question-number" id="qnum2">Soalan 2 daripada 8</div>
+            <div class="question-text" id="qtext2">
+                Apakah kesan berlebihan yang betul bagi hormon berikut:<br>
+                <strong>2. Tiroksina?</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="incorrect" id="q2opt1">Kadar metabolisme rendah</div>
+                <div class="option" data-answer="correct" id="q2opt2">Kadar metabolisme tinggi</div>
+            </div>
+            <div class="feedback" id="feedback2"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevQuestion(2)" id="prev2">Sebelumnya</button>
+                <button class="btn btn-primary" id="next2" onclick="nextQuestion(2)" disabled>Seterusnya</button>
+            </div>
         </div>
 
-        <div class="info">
-            <h3 id="info-title">Bagaimana Pupil pada Mata Berfungsi?</h3>
-            <p id="info-bright"><strong id="bright-label">Di tempat terang:</strong> <span id="bright-desc">Pupil mengecil untuk melindungi retina daripada cahaya berlebihan dan memberikan penglihatan yang tajam.</span></p>
-            <p id="info-dark"><strong id="dark-label">Di tempat gelap:</strong> <span id="dark-desc">Pupil membesar untuk membenarkan lebih banyak cahaya masuk supaya kita boleh melihat dalam keadaan cahaya minimum.</span></p>
-            <p id="info-process"><strong id="process-label">Proses ini:</strong> <span id="process-desc">Dikawal oleh otot iris secara automatik dan berlaku dalam beberapa saat sebagai tindak balas terhadap perubahan intensiti cahaya.</span></p>
+        <!-- Soalan 3 -->
+        <div class="question-container" id="question3">
+            <div class="question-number" id="qnum3">Soalan 3 daripada 8</div>
+            <div class="question-text" id="qtext3">
+                Apakah kesan berlebihan yang betul bagi hormon berikut:<br>
+                <strong>3. Testosteron?</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="correct" id="q3opt1">Menyebabkan sifat kelelakian pada perempuan</div>
+                <div class="option" data-answer="incorrect" id="q3opt2">Menyebabkan sifat keperempuan pada lelaki</div>
+            </div>
+            <div class="feedback" id="feedback3"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevQuestion(3)" id="prev3">Sebelumnya</button>
+                <button class="btn btn-primary" id="next3" onclick="nextQuestion(3)" disabled>Seterusnya</button>
+            </div>
+        </div>
+
+        <!-- Soalan 4 -->
+        <div class="question-container" id="question4">
+            <div class="question-number" id="qnum4">Soalan 4 daripada 8</div>
+            <div class="question-text" id="qtext4">
+                Apakah kesan kekurangan yang betul bagi hormon berikut:<br>
+                <strong>1. Insulin</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="incorrect" id="q4opt1">Diabetes insipidus</div>
+                <div class="option" data-answer="correct" id="q4opt2">Diabetes melitus</div>
+            </div>
+            <div class="feedback" id="feedback4"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevQuestion(4)" id="prev4">Sebelumnya</button>
+                <button class="btn btn-primary" id="next4" onclick="nextQuestion(4)" disabled>Seterusnya</button>
+            </div>
+        </div>
+
+        <!-- Soalan 5 -->
+        <div class="question-container" id="question5">
+            <div class="question-number" id="qnum5">Soalan 5 daripada 8</div>
+            <div class="question-text" id="qtext5">
+                Apakah kesan kekurangan yang betul bagi hormon berikut:<br>
+                <strong>2. Tiroksina</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="correct" id="q5opt1">Perkembangan kanak-kanak terbantut</div>
+                <div class="option" data-answer="incorrect" id="q5opt2">Perkembangan kanak-kanak tidak terkawal</div>
+            </div>
+            <div class="feedback" id="feedback5"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevQuestion(5)" id="prev5">Sebelumnya</button>
+                <button class="btn btn-primary" id="next5" onclick="nextQuestion(5)" disabled>Seterusnya</button>
+            </div>
+        </div>
+
+        <!-- Soalan 6 -->
+        <div class="question-container" id="question6">
+            <div class="question-number" id="qnum6">Soalan 6 daripada 8</div>
+            <div class="question-text" id="qtext6">
+                Apakah kesan kekurangan yang betul bagi hormon berikut:<br>
+                <strong>3. Progesteron</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="incorrect" id="q6opt1">Sindrom Prahaid</div>
+                <div class="option" data-answer="correct" id="q6opt2">Keguguran kandungan</div>
+            </div>
+            <div class="feedback" id="feedback6"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevQuestion(6)" id="prev6">Sebelumnya</button>
+                <button class="btn btn-primary" id="next6" onclick="nextQuestion(6)" disabled>Seterusnya</button>
+            </div>
+        </div>
+
+        <!-- Soalan 7 -->
+        <div class="question-container" id="question7">
+            <div class="question-number" id="qnum7">Soalan 7 daripada 8</div>
+            <div class="question-text" id="qtext7">
+                Apakah kesan kekurangan yang betul bagi hormon berikut:<br>
+                <strong>4. Testosteron</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="incorrect" id="q7opt1">Sindrom Klinefelter</div>
+                <div class="option" data-answer="correct" id="q7opt2">Lambat akil baligh</div>
+            </div>
+            <div class="feedback" id="feedback7"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevQuestion(7)" id="prev7">Sebelumnya</button>
+                <button class="btn btn-primary" id="next7" onclick="nextQuestion(7)" disabled>Seterusnya</button>
+            </div>
+        </div>
+
+        <!-- Soalan 8 -->
+        <div class="question-container" id="question8">
+            <div class="question-number" id="qnum8">Soalan 8 daripada 8</div>
+            <div class="question-text" id="qtext8">
+                Apakah kesan kekurangan yang betul bagi hormon berikut:<br>
+                <strong>5. Estrogen</strong>
+            </div>
+            <div class="options">
+                <div class="option" data-answer="correct" id="q8opt1">Perkembangan ciri seks sekunder perempuan terjejas</div>
+                <div class="option" data-answer="incorrect" id="q8opt2">Bilangan sperm rendah</div>
+            </div>
+            <div class="feedback" id="feedback8"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevQuestion(8)" id="prev8">Sebelumnya</button>
+                <button class="btn btn-primary" id="finish" onclick="showResults()" disabled>Selesai</button>
+            </div>
+        </div>
+
+        <!-- Keputusan -->
+        <div class="results" id="results">
+            <div class="score-circle" id="scoreCircle">0/8</div>
+            <h2 id="resultTitle">Tahniah!</h2>
+            <p id="resultMessage">Anda telah menyelesaikan kuiz hormon.</p>
+            <button class="btn btn-primary" onclick="restartQuiz()" id="restartBtn">Ulang Kuiz</button>
         </div>
     </div>
 
     <script>
+        let currentQuestion = 1;
+        let score = 0;
+        let answers = {};
         let currentLanguage = 'ms';
-        
+
+        // Language translations
         const translations = {
             ms: {
-                title: 'Simulasi Pupil pada Mata',
-                subtitle: 'Lihat bagaimana pupil pada mata bertindak balas terhadap perubahan cahaya',
-                btnBright: '☀️ Tempat Terang',
-                btnDark: '🌙 Tempat Gelap',
-                statusBright: '☀️ Tempat Terang - Pupil Mengecil',
-                statusDark: '🌙 Tempat Gelap - Pupil Membesar',
-                envBright: '☀️ TERANG',
-                envDark: '🌙 GELAP',
-                infoTitle: 'Bagaimana Pupil pada Mata Berfungsi?',
-                brightLabel: 'Di tempat terang:',
-                brightDesc: 'Pupil mengecil (konstriksi) untuk melindungi retina daripada cahaya berlebihan dan memberikan penglihatan yang tajam.',
-                darkLabel: 'Di tempat gelap:',
-                darkDesc: 'Pupil membesar (dilatasi) untuk membenarkan lebih banyak cahaya masuk supaya kita boleh melihat dalam keadaan cahaya minimum.',
-                processLabel: 'Proses ini:',
-                processDesc: 'Dikawal oleh otot iris secara automatik dan berlaku dalam beberapa saat sebagai tindak balas terhadap perubahan intensiti cahaya.'
+                mainTitle: '🧬 Kuiz Hormon',
+                mainSubtitle: 'Uji pengetahuan anda tentang kesan berlebihan dan kekurangan hormon',
+                qnum1: 'Soalan 1 daripada 8',
+                qnum2: 'Soalan 2 daripada 8',
+                qnum3: 'Soalan 3 daripada 8',
+                qnum4: 'Soalan 4 daripada 8',
+                qnum5: 'Soalan 5 daripada 8',
+                qnum6: 'Soalan 6 daripada 8',
+                qnum7: 'Soalan 7 daripada 8',
+                qnum8: 'Soalan 8 daripada 8',
+                qtext1: 'Apakah kesan berlebihan yang betul bagi hormon berikut:<br><strong>1. Hormon pertumbuhan?</strong>',
+                qtext2: 'Apakah kesan berlebihan yang betul bagi hormon berikut:<br><strong>2. Tiroksina?</strong>',
+                qtext3: 'Apakah kesan berlebihan yang betul bagi hormon berikut:<br><strong>3. Testosteron?</strong>',
+                qtext4: 'Apakah kesan kekurangan yang betul bagi hormon berikut:<br><strong>1. Insulin</strong>',
+                qtext5: 'Apakah kesan kekurangan yang betul bagi hormon berikut:<br><strong>2. Tiroksina</strong>',
+                qtext6: 'Apakah kesan kekurangan yang betul bagi hormon berikut:<br><strong>3. Progesteron</strong>',
+                qtext7: 'Apakah kesan kekurangan yang betul bagi hormon berikut:<br><strong>4. Testosteron</strong>',
+                qtext8: 'Apakah kesan kekurangan yang betul bagi hormon berikut:<br><strong>5. Estrogen</strong>',
+                q1opt1: 'Akromegali (Kegergasian)',
+                q1opt2: 'Kekerdilan',
+                q2opt1: 'Kadar metabolisme rendah',
+                q2opt2: 'Kadar metabolisme tinggi',
+                q3opt1: 'Menyebabkan sifat kelelakian pada perempuan',
+                q3opt2: 'Menyebabkan sifat keperempuan pada lelaki',
+                q4opt1: 'Diabetes insipidus',
+                q4opt2: 'Diabetes melitus',
+                q5opt1: 'Perkembangan kanak-kanak terbantut',
+                q5opt2: 'Perkembangan kanak-kanak tidak terkawal',
+                q6opt1: 'Sindrom Prahaid',
+                q6opt2: 'Keguguran kandungan',
+                q7opt1: 'Sindrom Klinefelter',
+                q7opt2: 'Lambat akil baligh',
+                q8opt1: 'Perkembangan ciri seks sekunder perempuan terjejas',
+                q8opt2: 'Bilangan sperm rendah',
+                prev1: 'Sebelumnya',
+                prev2: 'Sebelumnya',
+                prev3: 'Sebelumnya',
+                prev4: 'Sebelumnya',
+                prev5: 'Sebelumnya',
+                prev6: 'Sebelumnya',
+                prev7: 'Sebelumnya',
+                prev8: 'Sebelumnya',
+                next1: 'Seterusnya',
+                next2: 'Seterusnya',
+                next3: 'Seterusnya',
+                next4: 'Seterusnya',
+                next5: 'Seterusnya',
+                next6: 'Seterusnya',
+                next7: 'Seterusnya',
+                finish: 'Selesai',
+                restartBtn: 'Ulang Kuiz',
+                correctFeedback: '✅ Jawapan anda tepat',
+                incorrectFeedback: '❌ Jawapan anda salah',
+                excellentTitle: 'Cemerlang! 🏆',
+                goodTitle: 'Bagus! 👍',
+                tryAgainTitle: 'Cuba Lagi! 💪'
             },
             en: {
-                title: 'Eye Pupil Simulation',
-                subtitle: 'See how the pupils in the eyes respond to changes in light',
-                btnBright: '☀️ Bright Places',
-                btnDark: '🌙 Dark Places',
-                statusBright: '☀️ Bright Places - Pupils Constrict',
-                statusDark: '🌙 Dark Places - Pupils Dilate',
-                envBright: '☀️ BRIGHT',
-                envDark: '🌙 DARK',
-                infoTitle: 'How Do Eye Pupils Function?',
-                brightLabel: 'In bright places:',
-                brightDesc: 'Pupils constrict to protect the retina from excessive light and provide sharp vision.',
-                darkLabel: 'In dark places:',
-                darkDesc: 'Pupils dilate to allow more light to enter so we can see in minimal light conditions.',
-                processLabel: 'This process:',
-                processDesc: 'Is controlled by the iris muscles automatically and occurs within seconds as a response to changes in light intensity.'
+                mainTitle: '🧬 Hormone Quiz',
+                mainSubtitle: 'Test your knowledge about hormone excess and deficiency effects',
+                qnum1: 'Question 1 of 8',
+                qnum2: 'Question 2 of 8',
+                qnum3: 'Question 3 of 8',
+                qnum4: 'Question 4 of 8',
+                qnum5: 'Question 5 of 8',
+                qnum6: 'Question 6 of 8',
+                qnum7: 'Question 7 of 8',
+                qnum8: 'Question 8 of 8',
+                qtext1: 'What is the correct excessive effect of the following hormone:<br><strong>1. Growth hormone?</strong>',
+                qtext2: 'What is the correct excessive effect of the following hormone:<br><strong>2. Thyroxine?</strong>',
+                qtext3: 'What is the correct excessive effect of the following hormone:<br><strong>3. Testosterone?</strong>',
+                qtext4: 'What is the correct deficiency effect of the following hormone:<br><strong>1. Insulin</strong>',
+                qtext5: 'What is the correct deficiency effect of the following hormone:<br><strong>2. Thyroxine</strong>',
+                qtext6: 'What is the correct deficiency effect of the following hormone:<br><strong>3. Progesterone</strong>',
+                qtext7: 'What is the correct deficiency effect of the following hormone:<br><strong>4. Testosterone</strong>',
+                qtext8: 'What is the correct deficiency effect of the following hormone:<br><strong>5. Estrogen</strong>',
+                q1opt1: 'Acromegaly (Gigantism)',
+                q1opt2: 'Dwarfism',
+                q2opt1: 'Low metabolic rate',
+                q2opt2: 'High metabolic rate',
+                q3opt1: 'Causes masculine traits in females',
+                q3opt2: 'Causes feminine traits in males',
+                q4opt1: 'Diabetes insipidus',
+                q4opt2: 'Diabetes mellitus',
+                q5opt1: 'Stunted child development',
+                q5opt2: 'Uncontrolled child development',
+                q6opt1: 'Premenstrual syndrome',
+                q6opt2: 'Miscarriage',
+                q7opt1: 'Klinefelter syndrome',
+                q7opt2: 'Delayed puberty',
+                q8opt1: 'Female secondary sexual characteristics development affected',
+                q8opt2: 'Low sperm count',
+                prev1: 'Previous',
+                prev2: 'Previous',
+                prev3: 'Previous',
+                prev4: 'Previous',
+                prev5: 'Previous',
+                prev6: 'Previous',
+                prev7: 'Previous',
+                prev8: 'Previous',
+                next1: 'Next',
+                next2: 'Next',
+                next3: 'Next',
+                next4: 'Next',
+                next5: 'Next',
+                next6: 'Next',
+                next7: 'Next',
+                finish: 'Finish',
+                restartBtn: 'Restart Quiz',
+                correctFeedback: '✅ Your answer is correct',
+                incorrectFeedback: '❌ Your answer is wrong',
+                excellentTitle: 'Excellent! 🏆',
+                goodTitle: 'Good! 👍',
+                tryAgainTitle: 'Try Again! 💪'
             }
         };
 
-        function setLanguage(lang) {
+        function switchLanguage(lang) {
             currentLanguage = lang;
             
-            // Update active button
+            // Update language buttons
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('lang-' + lang).classList.add('active');
+            event.target.classList.add('active');
             
             // Update all text content
-            const t = translations[lang];
-            document.getElementById('main-title').textContent = t.title;
-            document.getElementById('subtitle').textContent = t.subtitle;
-            document.getElementById('btn-bright').innerHTML = t.btnBright;
-            document.getElementById('btn-dark').innerHTML = t.btnDark;
-            document.getElementById('info-title').textContent = t.infoTitle;
-            document.getElementById('bright-label').textContent = t.brightLabel;
-            document.getElementById('bright-desc').textContent = t.brightDesc;
-            document.getElementById('dark-label').textContent = t.darkLabel;
-            document.getElementById('dark-desc').textContent = t.darkDesc;
-            document.getElementById('process-label').textContent = t.processLabel;
-            document.getElementById('process-desc').textContent = t.processDesc;
-            
-            // Update environment boxes
-            updateEnvironmentBoxes();
-            
-            // Update status based on current state
-            updateStatus();
-        }
-
-        function updateStatus() {
-            const status = document.getElementById('status');
-            const t = translations[currentLanguage];
-            
-            if (status.classList.contains('bright')) {
-                status.innerHTML = t.statusBright;
-            } else {
-                status.innerHTML = t.statusDark;
-            }
-        }
-
-        function updateEnvironmentBoxes() {
-            // Environment box now has no text content
-        }
-
-        function setBrightEnvironment() {
-            // Change pupils to small size
-            const pupils = document.querySelectorAll('.pupil');
-            pupils.forEach(pupil => {
-                pupil.classList.remove('dark');
-                pupil.classList.add('bright');
-            });
-
-            // Change environment
-            document.body.classList.remove('dark-env');
-            document.body.classList.add('bright-env');
-
-            // Update status
-            const status = document.getElementById('status');
-            status.classList.remove('dark');
-            status.classList.add('bright');
-            
-            // Update environment boxes
-            const envBoxes = document.querySelectorAll('.environment-box');
-            envBoxes.forEach(box => {
-                box.classList.remove('dark');
-                box.classList.add('bright');
-            });
-            
-            updateStatus();
-            updateEnvironmentBoxes();
-        }
-
-        function setDarkEnvironment() {
-            // Change pupils to large size
-            const pupils = document.querySelectorAll('.pupil');
-            pupils.forEach(pupil => {
-                pupil.classList.remove('bright');
-                pupil.classList.add('dark');
-            });
-
-            // Change environment
-            document.body.classList.remove('bright-env');
-            document.body.classList.add('dark-env');
-
-            // Update status
-            const status = document.getElementById('status');
-            status.classList.remove('bright');
-            status.classList.add('dark');
-            
-            // Update environment boxes
-            const envBoxes = document.querySelectorAll('.environment-box');
-            envBoxes.forEach(box => {
-                box.classList.remove('bright');
-                box.classList.add('dark');
-            });
-            
-            updateStatus();
-            updateEnvironmentBoxes();
-        }
-
-        // Add resize observer to update scale factor dynamically
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                const container = entry.target;
-                const width = entry.contentRect.width;
-                
-                // Calculate scale factor based on container width
-                let scaleFactor = 1;
-                if (width <= 300) scaleFactor = 0.5;
-                else if (width <= 400) scaleFactor = 0.6;
-                else if (width <= 500) scaleFactor = 0.8;
-                else if (width >= 800) scaleFactor = 1.4;
-                else if (width >= 700) scaleFactor = 1.2;
-                
-                container.style.setProperty('--scale-factor', scaleFactor);
-            }
-        });
-
-        // Observe the container for size changes
-        const container = document.querySelector('.container');
-        resizeObserver.observe(container);
-
-        // Auto demonstration
-        let autoDemo = true;
-        let currentState = 'bright';
-
-        function autoDemonstration() {
-            if (autoDemo) {
-                setTimeout(() => {
-                    if (currentState === 'bright') {
-                        setDarkEnvironment();
-                        currentState = 'dark';
+            const trans = translations[lang];
+            Object.keys(trans).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (key.startsWith('qtext')) {
+                        element.innerHTML = trans[key];
                     } else {
-                        setBrightEnvironment();
-                        currentState = 'bright';
+                        element.textContent = trans[key];
                     }
-                    autoDemonstration();
-                }, 4000);
-            }
+                }
+            });
         }
 
-        // Start auto demo
-        setTimeout(() => {
-            autoDemonstration();
-        }, 2000);
-
-        // Stop auto demo when user interacts
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                autoDemo = false;
+        // Tambah event listener untuk semua pilihan
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectAnswer(this);
+                });
             });
         });
+
+        function selectAnswer(selectedOption) {
+            const questionContainer = selectedOption.closest('.question-container');
+            const questionId = questionContainer.id;
+            const questionNum = questionId.replace('question', '');
+            
+            // Buang selection sebelumnya
+            const allOptions = questionContainer.querySelectorAll('.option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Pilih jawapan baru
+            selectedOption.classList.add('selected');
+            
+            // Simpan jawapan
+            answers[questionNum] = selectedOption.dataset.answer;
+            
+            // Tunjuk feedback
+            showFeedback(questionNum, selectedOption.dataset.answer);
+            
+            // Enable butang next
+            const nextBtn = document.getElementById('next' + questionNum) || document.getElementById('finish');
+            nextBtn.disabled = false;
+        }
+
+        function showFeedback(questionNum, answer) {
+            const feedback = document.getElementById('feedback' + questionNum);
+            const questionContainer = document.getElementById('question' + questionNum);
+            const options = questionContainer.querySelectorAll('.option');
+            
+            // Tunjuk jawapan betul dan salah
+            options.forEach(option => {
+                if (option.dataset.answer === 'correct') {
+                    option.classList.add('correct');
+                } else if (option.classList.contains('selected') && option.dataset.answer === 'incorrect') {
+                    option.classList.add('incorrect');
+                }
+                option.style.pointerEvents = 'none'; // Disable klik lagi
+            });
+            
+            if (answer === 'correct') {
+                feedback.className = 'feedback correct';
+                feedback.textContent = translations[currentLanguage].correctFeedback;
+                score++;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = translations[currentLanguage].incorrectFeedback;
+            }
+            feedback.style.display = 'block';
+        }
+
+        function nextQuestion(current) {
+            document.getElementById('question' + current).classList.remove('active');
+            currentQuestion = current + 1;
+            document.getElementById('question' + currentQuestion).classList.add('active');
+            updateProgress();
+        }
+
+        function prevQuestion(current) {
+            document.getElementById('question' + current).classList.remove('active');
+            currentQuestion = current - 1;
+            document.getElementById('question' + currentQuestion).classList.add('active');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion - 1) / 8) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showResults() {
+            document.getElementById('question8').classList.remove('active');
+            document.getElementById('results').style.display = 'block';
+            
+            const scoreCircle = document.getElementById('scoreCircle');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            scoreCircle.textContent = score + '/8';
+            
+            const percentage = (score / 8) * 100;
+            
+            if (percentage >= 80) {
+                resultTitle.textContent = translations[currentLanguage].excellentTitle;
+                if (currentLanguage === 'ms') {
+                    resultMessage.textContent = `Anda mendapat ${score} daripada 8 soalan betul (${percentage.toFixed(0)}%). Pengetahuan anda tentang hormon sangat baik!`;
+                } else {
+                    resultMessage.textContent = `You got ${score} out of 8 questions correct (${percentage.toFixed(0)}%). Your knowledge about hormones is excellent!`;
+                }
+                scoreCircle.style.background = 'linear-gradient(135deg, #48bb78, #38a169)';
+            } else if (percentage >= 60) {
+                resultTitle.textContent = translations[currentLanguage].goodTitle;
+                if (currentLanguage === 'ms') {
+                    resultMessage.textContent = `Anda mendapat ${score} daripada 8 soalan betul (${percentage.toFixed(0)}%). Teruskan usaha!`;
+                } else {
+                    resultMessage.textContent = `You got ${score} out of 8 questions correct (${percentage.toFixed(0)}%). Keep up the good work!`;
+                }
+                scoreCircle.style.background = 'linear-gradient(135deg, #ed8936, #dd6b20)';
+            } else {
+                resultTitle.textContent = translations[currentLanguage].tryAgainTitle;
+                if (currentLanguage === 'ms') {
+                    resultMessage.textContent = `Anda mendapat ${score} daripada 8 soalan betul (${percentage.toFixed(0)}%). Jangan putus asa, cuba sekali lagi!`;
+                } else {
+                    resultMessage.textContent = `You got ${score} out of 8 questions correct (${percentage.toFixed(0)}%). Don't give up, try again!`;
+                }
+                scoreCircle.style.background = 'linear-gradient(135deg, #f56565, #e53e3e)';
+            }
+            
+            updateProgress();
+            document.getElementById('progressFill').style.width = '100%';
+        }
+
+
+
+        function restartQuiz() {
+            currentQuestion = 1;
+            score = 0;
+            answers = {};
+            
+            // Reset semua soalan
+            for (let i = 1; i <= 8; i++) {
+                const questionContainer = document.getElementById('question' + i);
+                questionContainer.classList.remove('active');
+                
+                const options = questionContainer.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                    option.style.pointerEvents = 'auto';
+                });
+                
+                const feedback = document.getElementById('feedback' + i);
+                feedback.style.display = 'none';
+                
+                const nextBtn = document.getElementById('next' + i) || document.getElementById('finish');
+                if (nextBtn) nextBtn.disabled = true;
+            }
+            
+            // Tunjuk soalan pertama
+            document.getElementById('question1').classList.add('active');
+            document.getElementById('results').style.display = 'none';
+            
+            // Reset progress bar
+            document.getElementById('progressFill').style.width = '0%';
+        }
+
+
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98161ed7b7138177',t:'MTc1ODI1Mzg0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9848b7ca81ba3cd8',t:'MTc1ODc4NDM5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
