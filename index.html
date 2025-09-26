@@ -158,34 +158,52 @@
         }
 
         .punnett-square {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-            max-width: 320px;
+            display: flex;
+            justify-content: center;
             margin: 20px auto;
-            background: #333;
-            border: 2px solid #333;
+            max-width: 320px;
         }
 
-        .punnett-cell {
+        .punnett-table {
+            border-collapse: collapse;
+            border: 2px solid #333;
             background: white;
+            margin: 0 auto;
+        }
+
+        .punnett-table th,
+        .punnett-table td {
+            border: 1px solid #333;
             padding: 18px;
             text-align: center;
             font-family: monospace;
             font-weight: bold;
             min-height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #333;
+            min-width: 60px;
             font-size: 1.3rem;
         }
 
-        .punnett-cell.header {
+        .punnett-header {
             background: #fff9c4;
             color: #333;
-            border: 1px solid #333;
             font-size: 1.5rem;
+        }
+
+        .punnett-header.corner {
+            background: #add8e6;
+        }
+
+        .punnett-header.father-header {
+            background: #c6f6d5;
+        }
+
+        .punnett-header.mother-header {
+            background: #fff9c4;
+        }
+
+        .punnett-cell {
+            background: white;
+            color: #333;
         }
 
         .offspring-grid {
@@ -298,6 +316,23 @@
             
             .punnett-cell.header {
                 font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .results > div[style*="grid-template-columns: 1fr auto"] {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+            
+            .results > div[style*="grid-template-columns: 1fr auto"] > div:last-child {
+                order: 2;
+                max-width: 100% !important;
+            }
+            
+            .punnett-square {
+                order: 1;
             }
         }
 
@@ -769,22 +804,32 @@
             const punnettSquare = document.getElementById('hair-punnett');
             punnettSquare.innerHTML = '';
 
+            // Create table structure
+            let tableHTML = '<table class="punnett-table">';
+            
             // Header row
-            punnettSquare.innerHTML += `<div class="punnett-cell header" style="background: #add8e6;">${t.gametes || 'Gamet'}</div>`;
+            tableHTML += '<tr>';
+            tableHTML += `<th class="punnett-header corner" style="background: #add8e6;">${t.gametes || 'Gamet'}</th>`;
             motherAlleles.forEach(allele => {
-                punnettSquare.innerHTML += `<div class="punnett-cell header">${formatAllele(allele)}</div>`;
+                tableHTML += `<th class="punnett-header mother-header">${formatAllele(allele)}</th>`;
             });
+            tableHTML += '</tr>';
 
             // Data rows
             const offspring = [];
             fatherAlleles.forEach(fAllele => {
-                punnettSquare.innerHTML += `<div class="punnett-cell header" style="background: #c6f6d5;">${formatAllele(fAllele)}</div>`;
+                tableHTML += '<tr>';
+                tableHTML += `<th class="punnett-header father-header" style="background: #c6f6d5;">${formatAllele(fAllele)}</th>`;
                 motherAlleles.forEach(mAllele => {
                     const genotype = [fAllele, mAllele].sort().join('');
                     offspring.push(genotype);
-                    punnettSquare.innerHTML += `<div class="punnett-cell">${formatGenotype(genotype)}</div>`;
+                    tableHTML += `<td class="punnett-cell">${formatGenotype(genotype)}</td>`;
                 });
+                tableHTML += '</tr>';
             });
+            
+            tableHTML += '</table>';
+            punnettSquare.innerHTML = tableHTML;
 
             // Calculate percentages
             const counts = {};
@@ -834,22 +879,32 @@
             const punnettSquare = document.getElementById('earlobe-punnett');
             punnettSquare.innerHTML = '';
 
+            // Create table structure
+            let tableHTML = '<table class="punnett-table">';
+            
             // Header row
-            punnettSquare.innerHTML += `<div class="punnett-cell header" style="background: #add8e6;">${t.gametes || 'Gamet'}</div>`;
+            tableHTML += '<tr>';
+            tableHTML += `<th class="punnett-header corner" style="background: #add8e6;">${t.gametes || 'Gamet'}</th>`;
             motherAlleles.forEach(allele => {
-                punnettSquare.innerHTML += `<div class="punnett-cell header">${formatAllele(allele)}</div>`;
+                tableHTML += `<th class="punnett-header mother-header">${formatAllele(allele)}</th>`;
             });
+            tableHTML += '</tr>';
 
             // Data rows
             const offspring = [];
             fatherAlleles.forEach(fAllele => {
-                punnettSquare.innerHTML += `<div class="punnett-cell header" style="background: #c6f6d5;">${formatAllele(fAllele)}</div>`;
+                tableHTML += '<tr>';
+                tableHTML += `<th class="punnett-header father-header" style="background: #c6f6d5;">${formatAllele(fAllele)}</th>`;
                 motherAlleles.forEach(mAllele => {
                     const genotype = [fAllele, mAllele].sort().join('');
                     offspring.push(genotype);
-                    punnettSquare.innerHTML += `<div class="punnett-cell">${formatGenotype(genotype)}</div>`;
+                    tableHTML += `<td class="punnett-cell">${formatGenotype(genotype)}</td>`;
                 });
+                tableHTML += '</tr>';
             });
+            
+            tableHTML += '</table>';
+            punnettSquare.innerHTML = tableHTML;
 
             // Calculate percentages
             const counts = {};
