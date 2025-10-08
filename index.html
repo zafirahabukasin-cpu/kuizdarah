@@ -1,624 +1,407 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permainan Hoki Challenge</title>
+    <title>Kad Imbas Glosari Bola Sepak</title>
     <style>
         body {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
             min-height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        html {
-            height: 100%;
-        }
-
-        .game-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 2rem;
-            max-width: 800px;
-            width: 90%;
-            text-align: center;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .header {
-            margin-bottom: 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
         }
 
-        .title {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .header h1 {
             font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .subtitle {
-            color: #718096;
+        .header p {
             font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            background: #27ae60;
+        }
+
+        .btn:hover {
+            background: #229954;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .flashcard {
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #2d3748;
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            width: 100%;
+        }
+
+        .term {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .definition {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .card-number {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
         .stats {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            gap: 1rem;
+            justify-content: center;
+            gap: 30px;
+            color: white;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .stat-card {
-            padding: 1rem;
-            border-radius: 12px;
-            flex: 1;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
+        .stat-item {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
         }
 
-        .stat-card:nth-child(1) {
-            background: linear-gradient(145deg, #ebf8ff 0%, #bee3f8 100%);
-            border: 2px solid #4299e1;
-        }
-
-        .stat-card:nth-child(2) {
-            background: linear-gradient(145deg, #e6fffa 0%, #b2f5ea 100%);
-            border: 2px solid #4fd1c7;
-        }
-
-        .stat-card:nth-child(3) {
-            background: linear-gradient(145deg, #fef5e7 0%, #fbb6ce 100%);
-            border: 2px solid #f687b3;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
         }
 
         .stat-label {
             font-size: 0.9rem;
-            color: #718096;
-            margin-bottom: 0.5rem;
+            opacity: 0.8;
         }
 
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2d3748;
-        }
-
-        .timer {
-            color: #e53e3e;
-        }
-
-        .question-card {
-            background: linear-gradient(145deg, #fef5e7 0%, #fed7aa 100%);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-left: 6px solid #f6ad55;
-            box-shadow: 0 8px 25px rgba(246, 173, 85, 0.2);
-            border: 2px solid #fbb6ce;
-        }
-
-        .question-number {
-            color: #4299e1;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .question-text {
-            font-size: 1.2rem;
-            color: #2d3748;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-
-        .answer-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .answer-btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        .btn-true {
-            background: #48bb78;
+        .flip-hint {
+            font-size: 0.7rem;
+            opacity: 0.7;
             color: white;
-            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+            margin-top: 5px;
         }
 
-        .btn-true:hover {
-            background: #38a169;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
-        }
-
-        .btn-false {
-            background: #f56565;
-            color: white;
-            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
-        }
-
-        .btn-false:hover {
-            background: #e53e3e;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
-        }
-
-        .start-screen, .end-screen {
+        .all-flipped {
             text-align: center;
-        }
-
-        .start-btn, .restart-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
         }
 
-        .start-btn:hover, .restart-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        .all-flipped h3 {
+            margin-bottom: 10px;
+            color: #43e97b;
         }
 
-        .result-card {
-            background: #f0fff4;
-            border: 2px solid #68d391;
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-
-        .result-title {
-            font-size: 2rem;
-            color: #2f855a;
-            margin-bottom: 1rem;
-        }
-
-        .result-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .result-stat {
-            background: white;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid #c6f6d5;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .feedback {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 12px;
-            font-weight: bold;
-        }
-
-        .correct {
-            background: #c6f6d5;
-            color: #2f855a;
-        }
-
-        .incorrect {
-            background: #fed7d7;
-            color: #c53030;
-        }
-
-        /* Desktop Layout */
-        @media (min-width: 1024px) {
-            .game-container {
-                max-width: 900px;
-                padding: 3rem;
-            }
-            
-            .title {
-                font-size: 3rem;
-            }
-            
-            .stats {
-                gap: 2rem;
-            }
-            
-            .answer-buttons {
-                gap: 2rem;
-            }
-            
-            .answer-btn {
-                min-width: 150px;
-                padding: 1.2rem 2.5rem;
-                font-size: 1.2rem;
-            }
-        }
-
-        /* Tablet Layout */
-        @media (max-width: 1023px) and (min-width: 769px) {
-            .game-container {
-                max-width: 700px;
-                padding: 2.5rem;
-            }
-            
-            .title {
-                font-size: 2.2rem;
-            }
-            
-            .stats {
-                gap: 1.5rem;
-            }
-        }
-
-        /* Mobile Layout */
         @media (max-width: 768px) {
-            .game-container {
-                width: 95%;
-                padding: 1.5rem;
-                margin: 1rem;
+            .header h1 {
+                font-size: 2rem;
             }
             
-            .stats {
-                flex-direction: column;
-                gap: 1rem;
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+                padding: 15px;
             }
             
-            .stat-card {
-                padding: 0.8rem;
+            .flashcard {
+                height: 180px;
             }
             
-            .answer-buttons {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .answer-btn {
-                width: 100%;
-                padding: 1rem;
-                font-size: 1rem;
-            }
-            
-            .title {
-                font-size: 1.8rem;
-                line-height: 1.2;
-            }
-            
-            .question-text {
+            .term {
                 font-size: 1.1rem;
             }
             
-            .question-card {
-                padding: 1.5rem;
+            .definition {
+                font-size: 0.85rem;
             }
             
-            .result-stats {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
             }
         }
 
-        /* Extra small mobile */
         @media (max-width: 480px) {
-            .game-container {
-                width: 98%;
-                padding: 1rem;
-                margin: 0.5rem;
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
             
-            .title {
-                font-size: 1.5rem;
+            .flashcard {
+                height: 160px;
             }
             
-            .question-text {
+            .term {
                 font-size: 1rem;
             }
             
-            .stat-value {
-                font-size: 1.3rem;
+            .definition {
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- Start Screen -->
-        <div id="startScreen" class="start-screen">
-            <div class="header">
-                <div style="display: flex; align-items: center; justify-content: center;">
-                    <span style="color: #8B4513; font-size: 3rem; margin-right: 10px;">🏑</span>
-                    <h1 class="title" style="margin: 0;">Cabaran Hoki</h1>
-                </div>
-                <p class="subtitle">Jawab 15 soalan dengan betul dalam masa terpantas!</p>
-            </div>
-            <div style="background: linear-gradient(145deg, #e6fffa 0%, #b2f5ea 100%); padding: 2rem; border-radius: 16px; margin: 2rem 0; border: 2px solid #4fd1c7; box-shadow: 0 8px 25px rgba(79, 209, 199, 0.2);">
-                <h3 style="color: #2d3748; margin-bottom: 1rem;">Peraturan Permainan:</h3>
-                <ul style="text-align: left; color: #2d3748; line-height: 1.8; font-weight: 500;">
-                    <li>15 soalan berkaitan strategi dan teknik hoki</li>
-                    <li>Setiap soalan mempunyai jawapan BETUL atau SALAH</li>
-                    <li>Timer akan bermula sebaik sahaja anda klik mula</li>
-                    <li>Cuba jawab semua soalan dengan betul secepat mungkin!</li>
-                    <li>Dapatkan skor tertinggi dan masa terpantas!</li>
-                </ul>
-            </div>
-            <button class="start-btn" onclick="startGame()">Mula Permainan</button>
+    <div class="container">
+        <div class="header">
+            <h1>⚽ Kad Imbas Glosari Bola Sepak</h1>
+            <p>Klik mana-mana kad untuk melihat definisi • 9 istilah penting dalam bola sepak</p>
         </div>
 
-        <!-- Game Screen -->
-        <div id="gameScreen" class="hidden">
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-label">Soalan</div>
-                    <div class="stat-value" id="questionCounter">1/15</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Skor</div>
-                    <div class="stat-value" id="score">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Masa</div>
-                    <div class="stat-value timer" id="timer">00:00</div>
-                </div>
-            </div>
-
-            <div class="question-card">
-                <div class="question-number" id="questionNumber">Soalan 1</div>
-                <div class="question-text" id="questionText"></div>
-                <div class="answer-buttons">
-                    <button class="answer-btn btn-true" onclick="answerQuestion(true)">✓ BETUL</button>
-                    <button class="answer-btn btn-false" onclick="answerQuestion(false)">✗ SALAH</button>
-                </div>
-                <div id="feedback" class="feedback hidden"></div>
-            </div>
+        <div class="controls">
+            <button class="btn" onclick="flipAllCards()">🔄 Buka Semua Kad</button>
+            <button class="btn" onclick="closeAllCards()">📋 Tutup Semua Kad</button>
         </div>
 
-        <!-- End Screen -->
-        <div id="endScreen" class="hidden">
-            <div class="result-card">
-                <div class="result-title">🎉 Tahniah!</div>
-                <div class="result-stats">
-                    <div class="result-stat">
-                        <div class="stat-label">Skor Akhir</div>
-                        <div class="stat-value" id="finalScore">0/15</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="stat-label">Masa Diambil</div>
-                        <div class="stat-value" id="finalTime">00:00</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="stat-label">Ketepatan</div>
-                        <div class="stat-value" id="accuracy">0%</div>
-                    </div>
-                </div>
-                <div id="performance" style="margin: 1.5rem 0; font-size: 1.1rem; color: #2d3748;"></div>
-            </div>
-            <button class="restart-btn" onclick="restartGame()">🔄 Main Lagi</button>
+        <div class="cards-grid" id="cardsGrid">
+            <!-- Cards will be generated by JavaScript -->
         </div>
+
+
     </div>
 
     <script>
-        const questions = [
+        const flashcards = [
             {
-                text: "Formasi 3-3-3-1 berkesan kerana hanya pemain tengah yang terlibat dalam serangan.",
-                answer: false,
-                explanation: "Formasi ini melibatkan semua pemain termasuk pertahanan."
+                term: "Gol",
+                english: "(Goal)",
+                icon: "🥅",
+                definition: "Situasi apabila bola melepasi garisan gol di antara tiang gol dan bawah palang, dikira sebagai mata.",
+                frontColor: "#ff6b6b",
+                backColor: "#ff6b6b"
             },
             {
-                text: "Dalam formasi 3-3-3-1, dua pemain tengah di posisi tepi akan overlap sebagai pemain sayap dan pemain pertahanan bergerak untuk menyokong di bahagian tengah.",
-                answer: true,
-                explanation: "Ini adalah strategi yang betul dalam formasi 3-3-3-1."
+                term: "Sepakan Penalti",
+                english: "(Penalty kick)",
+                icon: "⚽",
+                definition: "Sepakan dari titik penalti akibat kesalahan yang dilakukan pihak lawan dalam kawasan penalti.",
+                frontColor: "#4facfe",
+                backColor: "#4facfe"
             },
             {
-                text: "Strategi serangan 3-3-3-1 tidak mempunyai kelemahan kerana sistem pertahanannya kukuh di semua bahagian.",
-                answer: false,
-                explanation: "Kelemahan formasi ini ialah pertahanan terdedah di satu pihak jika serangan balas berlaku."
+                term: "Sepakan Sudut",
+                english: "(Corner kick)",
+                icon: "📐",
+                definition: "Sepakan yang diberikan apabila bola keluar melalui garisan gol tetapi kali terakhir disentuh oleh pemain lawan.",
+                frontColor: "#8B4513",
+                backColor: "#8B4513"
             },
             {
-                text: "Serangan sudut penalti dilakukan apabila pasukan lawan melakukan kesalahan dalam kawasan D.",
-                answer: true,
-                explanation: "Ini adalah peraturan yang betul dalam hoki."
+                term: "Sepakan Bebas",
+                english: "(Free kick)",
+                icon: "🏃‍♂️",
+                definition: "Sepakan yang diberikan kepada pasukan akibat kesalahan pihak lawan, boleh berbentuk sepakan terus atau tidak langsung.",
+                frontColor: "#667eea",
+                backColor: "#667eea"
             },
             {
-                text: "Dalam teknik Drag Flick, pemain akan menolak bola ke arah belakang padang.",
-                answer: false,
-                explanation: "Drag Flick digunakan untuk menghantar bola ke arah gol dengan cepat dan rendah."
+                term: "Ofsaid",
+                english: "(Offside)",
+                icon: "🚫",
+                definition: "Kesalahan apabila penyerang berada lebih dekat dengan pintu gol lawan berbanding pemain pertahanan terakhir ketika menerima hantaran bola.",
+                frontColor: "#8e44ad",
+                backColor: "#8e44ad"
             },
             {
-                text: "Pukulan terus (Direct Hit) dilakukan apabila pusher menolak bola terus ke arah gol.",
-                answer: false,
-                explanation: "Pukulan terus dilakukan apabila pusher menolak bola kepada stopper dan kemudian bola dipukul terus ke arah gol."
+                term: "Kad Kuning",
+                english: "(Yellow card)",
+                icon: "🟨",
+                definition: "Amaran rasmi yang diberikan oleh pengadil kepada pemain kerana melakukan kesalahan tertentu. Pemain yang menerima dua kad kuning dalam satu perlawanan akan dibuang padang.",
+                frontColor: "#f39c12",
+                backColor: "#f39c12"
             },
             {
-                text: "Pukulan terus (Direct Hit) biasanya dilakukan oleh pemain pertahanan yang mempunyai pukulan yang kuat.",
-                answer: true,
-                explanation: "Ini adalah fakta yang betul tentang pukulan terus."
+                term: "Kad Merah",
+                english: "(Red card)",
+                icon: "🟥",
+                definition: "Hukuman buang padang kepada pemain kerana kesalahan serius atau menerima dua kad kuning.",
+                frontColor: "#fa709a",
+                backColor: "#fa709a"
             },
             {
-                text: "Dalam pukulan terus (Direct Hit), hitter menentukan arah bola yang dipukul berdasarkan kedudukan penjaga gol dan pertahanan lawan.",
-                answer: true,
-                explanation: "Ini adalah strategi yang betul untuk pukulan terus."
+                term: "Jaringan Sendiri",
+                english: "(Own goal)",
+                icon: "😅",
+                definition: "Situasi apabila pemain menjaringkan bola ke dalam gawang pasukannya sendiri.",
+                frontColor: "#d299c2",
+                backColor: "#d299c2"
             },
             {
-                text: "Pukulan bervariasi (Indirect Hit) digunakan apabila pasukan menyerang mahu melakukan variasi pukulan untuk mengelirukan pihak pertahanan.",
-                answer: true,
-                explanation: "Ini adalah tujuan pukulan bervariasi."
-            },
-            {
-                text: "Strategi bertahan menggunakan formasi 3-3-3-1 memberi tumpuan kepada peranan pemain sweeper.",
-                answer: true,
-                explanation: "Sweeper memainkan peranan penting dalam formasi ini."
-            },
-            {
-                text: "Ketika bertahan, sweeper akan bergerak ke belakang gelanggang untuk mengawasi pergerakan pihak lawan jika diserang.",
-                answer: false,
-                explanation: "Ketika bertahan, sweeper akan turun ke kawasan D untuk mengawasi pergerakan pihak lawan."
-            },
-            {
-                text: "Strategi bertahan formasi 3-3-3-1 memerlukan tiga pemain pertahanan turun membantu mengawal kawasan sekitar garisan 22 meter.",
-                answer: true,
-                explanation: "Ini adalah strategi yang betul dalam formasi 3-3-3-1."
-            },
-            {
-                text: "Strategi kawalan zon bertujuan untuk menyerang kawasan pihak lawan dengan pantas.",
-                answer: false,
-                explanation: "kawalan zon bertujuan untuk mengawal pergerakan serangan lawan, bukan menyerang."
-            },
-            {
-                text: "Dalam strategi bertahan satu lawan satu, setiap pemain pertahanan akan menandingi seorang pemain lawan secara langsung.",
-                answer: true,
-                explanation: "Ini adalah definisi yang betul untuk strategi satu lawan satu."
-            },
-            {
-                text: "Strategi bertahan satu lawan satu digunakan apabila tahap kecergasan pemain rendah.",
-                answer: false,
-                explanation: "Ia digunakan apabila tahap kecergasan pemain tinggi."
+                term: "Masa Tambahan",
+                english: "(Injury time)",
+                icon: "⏱️",
+                definition: "Masa tambahan yang diberikan oleh pengadil bagi menggantikan masa yang hilang semasa permainan.",
+                frontColor: "#808080",
+                backColor: "#808080"
             }
         ];
 
-        let currentQuestion = 0;
-        let score = 0;
-        let startTime;
-        let timerInterval;
-        let gameQuestions = [];
+        let cardOrder = [...Array(flashcards.length).keys()];
 
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
+        function createCards() {
+            const cardsGrid = document.getElementById('cardsGrid');
+            cardsGrid.innerHTML = '';
+
+            cardOrder.forEach((index, position) => {
+                const card = flashcards[index];
+                const cardElement = document.createElement('div');
+                cardElement.className = 'flashcard';
+                cardElement.id = `card-${position}`;
+                cardElement.onclick = () => flipCard(position);
+
+                cardElement.innerHTML = `
+                    <div class="card-face card-front" style="background: ${card.frontColor};">
+                        <div class="card-number">${position + 1}</div>
+                        <div class="card-content">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">${card.icon}</div>
+                            <div class="term">${card.term}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px;">${card.english}</div>
+                            <div class="flip-hint">Klik</div>
+                        </div>
+                    </div>
+                    <div class="card-face card-back" style="background: ${card.backColor}; color: white;">
+                        <div class="card-number">${position + 1}</div>
+                        <div class="card-content">
+                            <div class="definition">${card.definition}</div>
+                            <div class="flip-hint">Klik</div>
+                        </div>
+                    </div>
+                `;
+
+                cardsGrid.appendChild(cardElement);
+            });
         }
 
-        function startGame() {
-            // Use all 15 questions in order
-            gameQuestions = questions.slice(0, 15);
-            currentQuestion = 0;
-            score = 0;
-            startTime = Date.now();
-            
-            document.getElementById('startScreen').classList.add('hidden');
-            document.getElementById('gameScreen').classList.remove('hidden');
-            
-            startTimer();
-            displayQuestion();
+        function flipCard(position) {
+            const card = document.getElementById(`card-${position}`);
+            card.classList.toggle('flipped');
         }
 
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                const elapsed = Date.now() - startTime;
-                const minutes = Math.floor(elapsed / 60000);
-                const seconds = Math.floor((elapsed % 60000) / 1000);
-                document.getElementById('timer').textContent = 
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }, 100);
-        }
-
-        function displayQuestion() {
-            const question = gameQuestions[currentQuestion];
-            document.getElementById('questionNumber').textContent = `Soalan ${currentQuestion + 1}`;
-            document.getElementById('questionText').textContent = question.text;
-            document.getElementById('questionCounter').textContent = `${currentQuestion + 1}/15`;
-            document.getElementById('score').textContent = score;
-            document.getElementById('feedback').classList.add('hidden');
-            
-            // Enable buttons
-            const buttons = document.querySelectorAll('.answer-btn');
-            buttons.forEach(btn => btn.disabled = false);
-        }
-
-        function answerQuestion(userAnswer) {
-            const question = gameQuestions[currentQuestion];
-            const isCorrect = userAnswer === question.answer;
-            const feedback = document.getElementById('feedback');
-            
-            // Disable buttons
-            const buttons = document.querySelectorAll('.answer-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            
-            if (isCorrect) {
-                score++;
-                feedback.textContent = `✓ Betul! ${question.explanation}`;
-                feedback.className = 'feedback correct';
-            } else {
-                feedback.textContent = `✗ Salah. ${question.explanation}`;
-                feedback.className = 'feedback incorrect';
-            }
-            
-            feedback.classList.remove('hidden');
-            document.getElementById('score').textContent = score;
-            
-            setTimeout(() => {
-                currentQuestion++;
-                if (currentQuestion < 15) {
-                    displayQuestion();
-                } else {
-                    endGame();
+        function flipAllCards() {
+            for (let i = 0; i < flashcards.length; i++) {
+                const card = document.getElementById(`card-${i}`);
+                if (!card.classList.contains('flipped')) {
+                    card.classList.add('flipped');
                 }
-            }, 2500);
-        }
-
-        function endGame() {
-            clearInterval(timerInterval);
-            const totalTime = Date.now() - startTime;
-            const minutes = Math.floor(totalTime / 60000);
-            const seconds = Math.floor((totalTime % 60000) / 1000);
-            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            const accuracy = Math.round((score / 15) * 100);
-            
-            document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('endScreen').classList.remove('hidden');
-            
-            document.getElementById('finalScore').textContent = `${score}/15`;
-            document.getElementById('finalTime').textContent = timeString;
-            document.getElementById('accuracy').textContent = `${accuracy}%`;
-            
-            let performance = '';
-            if (score === 15) {
-                performance = '🏆 Sempurna! Anda seorang pakar hoki!';
-            } else if (score >= 12) {
-                performance = '🌟 Hebat! Pengetahuan hoki anda sangat baik!';
-            } else if (score >= 9) {
-                performance = '👍 Bagus! Teruskan belajar tentang hoki!';
-            } else if (score >= 6) {
-                performance = '📚 Tidak mengapa, cuba lagi untuk meningkatkan skor!';
-            } else {
-                performance = '💪 Jangan berputus asa, teruskan belajar!';
             }
-            
-            document.getElementById('performance').textContent = performance;
         }
 
-        function restartGame() {
-            document.getElementById('endScreen').classList.add('hidden');
-            document.getElementById('startScreen').classList.remove('hidden');
+        function closeAllCards() {
+            for (let i = 0; i < flashcards.length; i++) {
+                const card = document.getElementById(`card-${i}`);
+                card.classList.remove('flipped');
+            }
         }
+
+        // Initialize
+        createCards();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b2a52c2257b4d0',t:'MTc1OTg5NTEyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b4662394e8b4d0',t:'MTc1OTkxMzUxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
