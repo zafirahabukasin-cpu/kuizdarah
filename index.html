@@ -217,21 +217,21 @@
             }
             
             .cards-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 20px;
-                padding: 15px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                padding: 10px;
             }
             
             .flashcard {
-                height: 200px;
+                height: 180px;
             }
             
             .term {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
             
             .definition {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
             
             .controls {
@@ -247,73 +247,185 @@
 
         @media (max-width: 480px) {
             body {
-                padding: 15px 10px;
+                padding: 10px 8px;
             }
             
             .container {
                 padding: 0;
                 width: 100%;
+                max-width: 100%;
+            }
+            
+            .header {
+                margin-bottom: 20px;
             }
             
             .header h1 {
-                font-size: 1.8rem;
-                margin-bottom: 8px;
+                font-size: 1.6rem;
+                margin-bottom: 6px;
+                line-height: 1.2;
             }
             
             .header p {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
                 padding: 0 5px;
-                margin-bottom: 25px;
+                margin-bottom: 20px;
+                line-height: 1.3;
             }
             
             .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 0;
-                margin: 0 auto 30px auto;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 0 5px;
+                margin: 0 auto 25px auto;
                 width: 100%;
-                max-width: 350px;
+                max-width: 100%;
             }
             
             .flashcard {
-                height: 200px;
-                min-height: 180px;
+                height: 160px;
+                min-height: 140px;
                 width: 100%;
                 margin: 0 auto;
             }
             
             .card-face {
-                padding: 15px;
+                padding: 10px;
+                border-radius: 10px;
             }
             
             .term {
-                font-size: 1.1rem;
-                margin-bottom: 8px;
+                font-size: 0.9rem;
+                margin-bottom: 5px;
+                line-height: 1.1;
             }
             
             .definition {
-                font-size: 0.9rem;
-                line-height: 1.4;
+                font-size: 0.75rem;
+                line-height: 1.2;
             }
             
             .controls {
                 flex-direction: column;
-                gap: 12px;
+                gap: 10px;
                 padding: 0;
-                margin-bottom: 25px;
+                margin-bottom: 20px;
                 align-items: center;
             }
             
             .btn {
                 width: 100%;
-                max-width: 280px;
-                padding: 14px 20px;
-                font-size: 1rem;
+                max-width: 260px;
+                padding: 12px 18px;
+                font-size: 0.95rem;
+                border-radius: 20px;
             }
             
             .card-content {
                 padding: 0;
                 width: 100%;
+            }
+            
+            .card-number {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+                top: 6px;
+                left: 8px;
+            }
+            
+            .flip-hint {
+                font-size: 0.6rem;
+                margin-top: 2px;
+            }
+            
+            .stats {
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .stat-item {
+                padding: 10px 15px;
+                border-radius: 8px;
+            }
+            
+            .stat-number {
+                font-size: 1.3rem;
+            }
+            
+            .stat-label {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Extra small phones (320px and below) */
+        @media (max-width: 320px) {
+            body {
+                padding: 8px 4px;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 0.8rem;
+                padding: 0 3px;
+                margin-bottom: 18px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 0 2px;
+                margin-bottom: 20px;
+            }
+            
+            .flashcard {
+                height: 140px;
+                min-height: 120px;
+            }
+            
+            .card-face {
+                padding: 8px;
+                border-radius: 8px;
+            }
+            
+            .term {
+                font-size: 0.8rem;
+                margin-bottom: 4px;
+                line-height: 1.1;
+            }
+            
+            .definition {
+                font-size: 0.7rem;
+                line-height: 1.15;
+            }
+            
+            .btn {
+                max-width: 240px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                border-radius: 18px;
+            }
+            
+            .controls {
+                gap: 8px;
+                margin-bottom: 18px;
+            }
+            
+            .card-number {
+                width: 18px;
+                height: 18px;
+                font-size: 0.65rem;
+                top: 4px;
+                left: 6px;
+            }
+            
+            .flip-hint {
+                font-size: 0.55rem;
+                margin-top: 1px;
             }
         }
     </style>
