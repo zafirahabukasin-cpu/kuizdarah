@@ -553,7 +553,7 @@
         { name: 'Diamond', type: 'element' },
         { name: 'Gold', type: 'element' },
         { name: 'Silver', type: 'element' },
-        { name: 'Sulfur', type: 'element' },
+        { name: 'Sulphur', type: 'element' },
         { name: 'Bauxite', type: 'compound' },
         { name: 'Galena', type: 'compound' },
         { name: 'Hematite', type: 'compound' },
@@ -711,13 +711,17 @@
       
       // Map old names to new names based on position
       elementDropped = tempElement.map(item => {
-        const index = mineralsData.ms.findIndex(m => m.name === item.name || mineralsData.en.findIndex(en => en.name === item.name) !== -1);
-        return mineralsData[currentLanguage][index] || item;
+        const idxMs = mineralsData.ms.findIndex(m => m.name === item.name);
+        const idxEn = mineralsData.en.findIndex(m => m.name === item.name);
+        const index = idxMs !== -1 ? idxMs : idxEn;
+        return index !== -1 ? mineralsData[currentLanguage][index] : item;
       });
       
       compoundDropped = tempCompound.map(item => {
-        const index = mineralsData.ms.findIndex(m => m.name === item.name || mineralsData.en.findIndex(en => en.name === item.name) !== -1);
-        return mineralsData[currentLanguage][index] || item;
+        const idxMs = mineralsData.ms.findIndex(m => m.name === item.name);
+        const idxEn = mineralsData.en.findIndex(m => m.name === item.name);
+        const index = idxMs !== -1 ? idxMs : idxEn;
+        return index !== -1 ? mineralsData[currentLanguage][index] : item;
       });
       
       // Update current minerals
