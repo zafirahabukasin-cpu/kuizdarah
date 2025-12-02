@@ -531,7 +531,7 @@
     <h2 class="modal-title">Tahniah! 🎉</h2>
     <p style="margin-bottom: 1rem; color: #4b5563;">Masukkan nama anda untuk papan pendahulu</p>
     <div class="input-group"><label for="playerNameInput" style="display: block; margin-bottom: 0.5rem; color: #4b5563; text-align: left;">Nama Pemain:</label> <input type="text" id="playerNameInput" class="name-input" placeholder="Masukkan nama anda">
-    </div><button class="btn" id="submitNameBtn">Simpan Skor</button>
+    </div><button class="btn" id="submitNameBtn" type="button">Simpan Skor</button>
    </div>
   </div>
   <script>
@@ -990,29 +990,59 @@
       submitBtn.textContent = t.saving;
       
       try {
-        const result = await window.dataSdk.create({
+        let ok = false;
+        if (window.dataSdk && typeof window.dataSdk.create === 'function') {
+          const result = await window.dataSdk.create({
+            nama_pemain: playerName,
+            skor: score,
+            masa_saat: elapsedSeconds,
+            tahap: 'Sempurna',
+            masa_selesai: new Date().toISOString()
+          });
+          ok = !!result?.isOk;
+        }
+        
+        if (!ok) {
+          const entry = {
+            nama_pemain: playerName,
+            skor: score,
+            masa_saat: elapsedSeconds,
+            tahap: 'Sempurna',
+            masa_selesai: new Date().toISOString()
+          };
+          const raw = localStorage.getItem('mineral_leaderboard');
+          const list = raw ? JSON.parse(raw) : [];
+          list.push(entry);
+          localStorage.setItem('mineral_leaderboard', JSON.stringify(list));
+          renderLeaderboard(list);
+        }
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = t.saveScore;
+        showToast(t.scoreSaved);
+        document.getElementById('nameModal').classList.remove('show');
+        nameInput.value = '';
+        resetGame();
+      } catch (error) {
+        const entry = {
           nama_pemain: playerName,
           skor: score,
           masa_saat: elapsedSeconds,
           tahap: 'Sempurna',
           masa_selesai: new Date().toISOString()
-        });
+        };
+        const raw = localStorage.getItem('mineral_leaderboard');
+        const list = raw ? JSON.parse(raw) : [];
+        list.push(entry);
+        localStorage.setItem('mineral_leaderboard', JSON.stringify(list));
+        renderLeaderboard(list);
         
         submitBtn.disabled = false;
         submitBtn.textContent = t.saveScore;
-        
-        if (result.isOk) {
-          showToast(t.scoreSaved);
-          document.getElementById('nameModal').classList.remove('show');
-          nameInput.value = '';
-          resetGame();
-        } else {
-          showToast(t.saveError);
-        }
-      } catch (error) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = t.saveScore;
-        showToast(t.saveError);
+        showToast(t.scoreSaved);
+        document.getElementById('nameModal').classList.remove('show');
+        nameInput.value = '';
+        resetGame();
       }
     }
     
@@ -1092,6 +1122,12 @@
         if (!initResult.isOk) {
           console.error('Failed to initialize data SDK');
         }
+      }
+      
+      if (!window.dataSdk) {
+        const raw = localStorage.getItem('mineral_leaderboard');
+        const list = raw ? JSON.parse(raw) : [];
+        renderLeaderboard(list);
       }
       
       if (window.elementSdk) {
