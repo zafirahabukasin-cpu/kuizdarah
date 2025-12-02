@@ -621,7 +621,7 @@
         scoreSaved: 'Score saved successfully!',
         saveError: 'Error saving score. Please try again.',
         noRecords: 'No records yet',
-        points: 'points'
+        points: 'marks'
       }
     };
     
@@ -928,7 +928,7 @@
         if (!compoundCorrect) wrongCount += compoundDropped.filter(m => m.type !== 'compound').length;
         
         const wrongMessage = t.wrongItems.replace('{count}', wrongCount).replace(' Semak semula!', '').replace(' Check again!', '');
-        feedbackMessage.textContent = wrongMessage + ` ${earnedPoints} mata!`;
+        feedbackMessage.textContent = wrongMessage + ` ${earnedPoints} ${t.points}!`;
       }
       
       setTimeout(() => {
