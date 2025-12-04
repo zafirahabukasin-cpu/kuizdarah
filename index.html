@@ -3,1217 +3,463 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Permainan Padanan Mineral</title>
+  <title>Nota Nasionalisme Asia Tenggara</title>
   <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
   <style>
-    body {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      height: 100%;
-      width: 100%;
-    }
-    
-    html {
-      height: 100%;
-      width: 100%;
-    }
-    
-    .game-wrapper {
-      min-height: 100%;
-      width: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .game-container {
-      max-width: 900px;
-      width: 100%;
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    
-    .game-title {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    
-    .instructions {
-      font-size: 1.1rem;
-      color: #f0f0f0;
-      margin-bottom: 1rem;
-    }
-    
-    .score-board {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border-radius: 12px;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    
-    .score-item {
-      text-align: center;
-    }
-    
-    .score-label {
-      font-size: 0.9rem;
-      color: #f0f0f0;
-      margin-bottom: 0.25rem;
-    }
-    
-    .score-value {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #ffffff;
-    }
-    
-    .language-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.5);
-      color: #ffffff;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      z-index: 100000;
-    }
-    
-    .language-toggle:hover {
-      background: rgba(255, 255, 255, 0.5);
-      transform: scale(1.05);
-    }
-    
-    .game-board {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .drop-zone {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 16px;
-      padding: 1.5rem;
-      min-height: 400px;
-      border: 3px solid transparent;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .drop-zone.selecting {
-      border-color: #667eea;
-      background: rgba(255, 255, 255, 1);
-      transform: scale(1.02);
-      box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
-    }
-    
-    .zone-title {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #667eea;
-      margin-bottom: 1rem;
-      text-align: center;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid #667eea;
-    }
-    
-    .minerals-container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .minerals-title {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #667eea;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-    
-    .selection-prompt {
-      background: rgba(102, 126, 234, 0.2);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      font-weight: bold;
-      color: #667eea;
-      display: none;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-    
-    .selection-prompt.show {
-      display: block;
-    }
-    
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.7;
-      }
-    }
-    
-    .minerals-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 1rem;
-      min-height: 100px;
-    }
-    
-    .mineral-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 12px;
-      padding: 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .mineral-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
-    }
-    
-    .mineral-card.selected {
-      transform: scale(1.1);
-      box-shadow: 0 0 0 4px #ffffff;
-    }
-    
-    .mineral-name {
-      font-size: 1rem;
-      font-weight: bold;
-      color: #ffffff;
-      margin-bottom: 0.25rem;
-    }
-    
-    .dropped-minerals {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    
-    .dropped-mineral {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 8px;
-      padding: 0.75rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      animation: dropIn 0.3s ease;
-    }
-    
-    @keyframes dropIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .dropped-name {
-      color: #ffffff;
-      font-weight: 500;
-    }
-    
-    .remove-btn {
-      background: rgba(255, 255, 255, 0.3);
-      border: none;
-      color: #ffffff;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-    
-    .remove-btn:hover {
-      background: rgba(255, 255, 255, 0.5);
-      transform: scale(1.1);
-    }
-    
-    .controls {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-    
-    .btn {
-      background: #ffffff;
-      color: #667eea;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    }
-    
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    .btn-check {
-      background: #10b981;
-      color: #ffffff;
-    }
-    
-    .btn-reset {
-      background: #ef4444;
-      color: #ffffff;
-    }
-    
-    .feedback {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-align: center;
-      margin-bottom: 2rem;
-      display: none;
-    }
-    
-    .feedback.show {
-      display: block;
-      animation: slideIn 0.3s ease;
-    }
-    
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .feedback-title {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-    
-    .feedback.correct .feedback-title {
-      color: #10b981;
-    }
-    
-    .feedback.incorrect .feedback-title {
-      color: #ef4444;
-    }
-    
-    .feedback-message {
-      font-size: 1.1rem;
-      color: #4b5563;
-      margin-bottom: 1rem;
-    }
-    
-    .leaderboard {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 16px;
-      padding: 1.5rem;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    
-    .leaderboard-title {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #667eea;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-    
-    .leaderboard-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.75rem;
-      background: rgba(102, 126, 234, 0.1);
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-    }
-    
-    .player-name {
-      font-weight: 500;
-      color: #4b5563;
-    }
-    
-    .player-score {
-      font-weight: bold;
-      color: #667eea;
-    }
-    
-    .toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ffffff;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      display: none;
-      animation: toastIn 0.3s ease;
-      z-index: 1000;
-    }
-    
-    .toast.show {
-      display: block;
-    }
-    
-    @keyframes toastIn {
-      from {
-        opacity: 0;
-        transform: translateX(100%);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    
-    .name-input-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 1rem;
-      box-sizing: border-box;
-    }
-    
-    .name-input-modal.show {
-      display: flex;
-    }
-    
-    .modal-content {
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 16px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      max-height: 90%;
-      overflow-y: auto;
-    }
-    
-    .modal-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #667eea;
-      margin-bottom: 1rem;
-    }
-    
-    .input-group {
-      margin-bottom: 1rem;
-    }
-    
-    .name-input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #667eea;
-      border-radius: 8px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    
-    .name-input:focus {
-      outline: none;
-      border-color: #764ba2;
-    }
-  </style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 24px;
+            opacity: 0.95;
+        }
+
+        .countries-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .country-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .country-button {
+            width: 100%;
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 20px;
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .country-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .country-button-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .country-flag {
+            width: 64px;
+            height: 48px;
+            border-radius: 6px;
+            object-fit: cover;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .country-button:hover .arrow {
+            color: white;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #667eea;
+            transition: color 0.3s ease;
+        }
+
+        .country-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            margin-top: 0;
+        }
+
+        .country-details.show {
+            max-height: 2000px;
+            margin-top: 15px;
+        }
+
+        .country-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+
+
+        .country-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .content-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .content-list li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+
+        .content-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .leader-item {
+            background: #f7fafc;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+
+
+        .timeline-item {
+            border-left: 3px solid #667eea;
+            padding-left: 15px;
+            margin-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 36px;
+            }
+            
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .countries-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body>
-  <div class="game-wrapper">
-   <div class="game-container">
-    <header class="header">
-     <h1 class="game-title" id="gameTitle">Permainan Padanan Mineral</h1>
-     <p class="instructions" id="instructions">Klik mineral dan pilih kategori yang betul!</p>
-    </header><button class="language-toggle" id="languageToggle">MS</button>
-    <div class="score-board">
-     <div class="score-item">
-      <div class="score-label" id="scoreLabel">
-       Skor
-      </div>
-      <div class="score-value" id="scoreValue">
-       0
-      </div>
-     </div>
-     <div class="score-item">
-      <div class="score-label" id="timeLabel">
-       Masa
-      </div>
-      <div class="score-value" id="timerValue">
-       00:00
-      </div>
-     </div>
-    </div>
-    <div class="minerals-container">
-     <div class="minerals-title">
-      Klik Mineral, Kemudian Klik Kategori
-     </div>
-     <div class="selection-prompt" id="selectionPrompt"></div>
-     <div class="minerals-grid" id="mineralsGrid"></div>
-    </div>
-    <div class="game-board">
-     <div class="drop-zone" id="elementZone" data-type="element">
-      <h2 class="zone-title">Mineral Unsur</h2>
-      <div class="dropped-minerals" id="elementDropped"></div>
-     </div>
-     <div class="drop-zone" id="compoundZone" data-type="compound">
-      <h2 class="zone-title">Mineral Sebatian</h2>
-      <div class="dropped-minerals" id="compoundDropped"></div>
-     </div>
-    </div>
-    <div class="feedback" id="feedback">
-     <div class="feedback-title" id="feedbackTitle"></div>
-     <div class="feedback-message" id="feedbackMessage"></div>
-    </div>
-    <div class="controls"><button class="btn btn-check" id="checkBtn">Semak Jawapan</button> <button class="btn btn-reset" id="resetBtn">Main Semula</button>
-    </div>
-    <div class="leaderboard">
-     <h2 class="leaderboard-title">Papan Pendahulu</h2>
-     <div id="leaderboardList"></div>
-    </div>
+  <div class="container">
+   <div class="header">
+    <h1 class="main-title" id="mainTitle">Kebangkitan Nasionalisme Asia Tenggara</h1>
+    <p class="subtitle" id="subtitle">Sejarah Perjuangan Kemerdekaan</p>
    </div>
-  </div>
-  <div class="toast" id="toast"></div>
-  <div class="name-input-modal" id="nameModal">
-   <div class="modal-content">
-    <h2 class="modal-title">Tahniah! 🎉</h2>
-    <p style="margin-bottom: 1rem; color: #4b5563;">Masukkan nama anda untuk papan pendahulu</p>
-    <div class="input-group"><label for="playerNameInput" style="display: block; margin-bottom: 0.5rem; color: #4b5563; text-align: left;">Nama Pemain:</label> <input type="text" id="playerNameInput" class="name-input" placeholder="Masukkan nama anda">
-    </div><button class="btn" id="submitNameBtn" type="button">Simpan Skor</button>
-   </div>
+   <div class="countries-grid" id="countriesGrid"></div>
   </div>
   <script>
-    const mineralsData = {
-      ms: [
-        { name: 'Kuprum', type: 'element' },
-        { name: 'Berlian', type: 'element' },
-        { name: 'Emas', type: 'element' },
-        { name: 'Perak', type: 'element' },
-        { name: 'Sulfur', type: 'element' },
-        { name: 'Bauksit', type: 'compound' },
-        { name: 'Galena', type: 'compound' },
-        { name: 'Hematit', type: 'compound' },
-        { name: 'Kasiterit', type: 'compound' },
-        { name: 'Kuarza', type: 'compound' }
-      ],
-      en: [
-        { name: 'Copper', type: 'element' },
-        { name: 'Diamond', type: 'element' },
-        { name: 'Gold', type: 'element' },
-        { name: 'Silver', type: 'element' },
-        { name: 'Sulphur', type: 'element' },
-        { name: 'Bauxite', type: 'compound' },
-        { name: 'Galena', type: 'compound' },
-        { name: 'Hematite', type: 'compound' },
-        { name: 'Cassiterite', type: 'compound' },
-        { name: 'Quartz', type: 'compound' }
-      ]
-    };
-    
-    const translations = {
-      ms: {
-        gameTitle: 'Permainan Padanan Mineral',
-        instructions: 'Klik mineral dan pilih kategori yang betul!',
-        dragTitle: 'Klik Mineral, Kemudian Klik Kategori',
-        selectPrompt: '👆 Pilih kategori untuk: {mineral}',
-        elementZone: 'Mineral Unsur',
-        compoundZone: 'Mineral Sebatian',
-        checkBtn: 'Semak Jawapan',
-        resetBtn: 'Main Semula',
-        leaderboardTitle: 'Papan Pendahulu',
-        scoreLabel: 'Skor',
-        timeLabel: 'Masa',
-        congratsTitle: 'Tahniah! 🎉',
-        enterName: 'Masukkan nama anda untuk papan pendahulu',
-        playerName: 'Nama Pemain:',
-        namePlaceholder: 'Masukkan nama anda',
-        saveScore: 'Simpan Skor',
-        saving: 'Menyimpan...',
-        perfectTitle: '🎉 Sempurna!',
-        tryAgainTitle: '❌ Cuba Lagi',
-        allCorrect: 'Semua mineral diletakkan dengan betul! Masa:',
-        wrongItems: 'Ada {count} mineral yang salah kategori. Semak semula!',
-        pleasePlace: 'Sila letak mineral dahulu!',
-        gameRestart: 'Permainan dimulakan semula!',
-        enterNamePrompt: 'Sila masukkan nama anda!',
-        scoreSaved: 'Skor berjaya disimpan!',
-        saveError: 'Ralat menyimpan skor. Sila cuba lagi.',
-        noRecords: 'Tiada rekod lagi',
-        points: 'mata'
-      },
-      en: {
-        gameTitle: 'Mineral Matching Game',
-        instructions: 'Click mineral and choose the correct category!',
-        dragTitle: 'Click Mineral, Then Click Category',
-        selectPrompt: '👆 Choose category for: {mineral}',
-        elementZone: 'Element Minerals',
-        compoundZone: 'Compound Minerals',
-        checkBtn: 'Check Answer',
-        resetBtn: 'Play Again',
-        leaderboardTitle: 'Leaderboard',
-        scoreLabel: 'Score',
-        timeLabel: 'Time',
-        congratsTitle: 'Congratulations! 🎉',
-        enterName: 'Enter your name for the leaderboard',
-        playerName: 'Player Name:',
-        namePlaceholder: 'Enter your name',
-        saveScore: 'Save Score',
-        saving: 'Saving...',
-        perfectTitle: '🎉 Perfect!',
-        tryAgainTitle: '❌ Try Again',
-        allCorrect: 'All minerals placed correctly! Time:',
-        wrongItems: 'There are {count} minerals in the wrong category. Check again!',
-        pleasePlace: 'Please place minerals first!',
-        gameRestart: 'Game restarted!',
-        enterNamePrompt: 'Please enter your name!',
-        scoreSaved: 'Score saved successfully!',
-        saveError: 'Error saving score. Please try again.',
-        noRecords: 'No records yet',
-        points: 'marks'
-      }
-    };
-    
-    let currentLanguage = 'ms';
-    let minerals = [...mineralsData.ms];
-    
-    const defaultConfig = {
-      tajuk_permainan: 'Permainan Padanan Mineral',
-      arahan_permainan: 'Klik mineral dan pilih kategori yang betul!',
-      background_color: '#667eea',
-      surface_color: '#ffffff',
-      text_color: '#4b5563',
-      primary_action_color: '#10b981',
-      secondary_action_color: '#ef4444',
-      font_family: 'Segoe UI',
-      font_size: 16
-    };
-    
-    let currentMinerals = [...minerals];
-    let elementDropped = [];
-    let compoundDropped = [];
-    let score = 0;
-    let correct = 0;
-    let attempts = 0;
-    let selectedMineral = null;
-    let leaderboardData = [];
-    let startTime = null;
-    let timerInterval = null;
-    let elapsedSeconds = 0;
-    
-    function shuffleArray(array) {
-      const shuffled = [...array];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    }
-    
-    function startTimer() {
-      startTime = Date.now();
-      elapsedSeconds = 0;
-      
-      if (timerInterval) {
-        clearInterval(timerInterval);
-      }
-      
-      timerInterval = setInterval(() => {
-        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-        updateTimerDisplay();
-      }, 1000);
-    }
-    
-    function stopTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-    }
-    
-    function updateTimerDisplay() {
-      const minutes = Math.floor(elapsedSeconds / 60);
-      const seconds = elapsedSeconds % 60;
-      const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      document.getElementById('timerValue').textContent = display;
-    }
-    
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = seconds % 60;
-      const minuteText = currentLanguage === 'ms' ? 'minit' : 'min';
-      const secondText = currentLanguage === 'ms' ? 'saat' : 'sec';
-      if (mins > 0) {
-        return `${mins} ${minuteText} ${secs} ${secondText}`;
-      }
-      return `${secs} ${secondText}`;
-    }
-    
-    function toggleLanguage() {
-      currentLanguage = currentLanguage === 'ms' ? 'en' : 'ms';
-      minerals = [...mineralsData[currentLanguage]];
-      updateLanguage();
-      
-      // Rebuild current game state with new language
-      const tempElement = [...elementDropped];
-      const tempCompound = [...compoundDropped];
-      
-      // Map old names to new names based on position
-      elementDropped = tempElement.map(item => {
-        const idxMs = mineralsData.ms.findIndex(m => m.name === item.name);
-        const idxEn = mineralsData.en.findIndex(m => m.name === item.name);
-        const index = idxMs !== -1 ? idxMs : idxEn;
-        return index !== -1 ? mineralsData[currentLanguage][index] : item;
-      });
-      
-      compoundDropped = tempCompound.map(item => {
-        const idxMs = mineralsData.ms.findIndex(m => m.name === item.name);
-        const idxEn = mineralsData.en.findIndex(m => m.name === item.name);
-        const index = idxMs !== -1 ? idxMs : idxEn;
-        return index !== -1 ? mineralsData[currentLanguage][index] : item;
-      });
-      
-      // Update current minerals
-      const usedNames = [...elementDropped, ...compoundDropped].map(m => m.name);
-      currentMinerals = mineralsData[currentLanguage].filter(m => !usedNames.includes(m.name));
-      
-      renderMinerals();
-      renderDroppedMinerals();
-      renderLeaderboard(leaderboardData);
-    }
-    
-    function updateLanguage() {
-      const t = translations[currentLanguage];
-      
-      document.getElementById('gameTitle').textContent = t.gameTitle;
-      document.getElementById('instructions').textContent = t.instructions;
-      document.querySelector('.minerals-title').textContent = t.dragTitle;
-      document.querySelector('#elementZone .zone-title').textContent = t.elementZone;
-      document.querySelector('#compoundZone .zone-title').textContent = t.compoundZone;
-      document.getElementById('checkBtn').textContent = t.checkBtn;
-      document.getElementById('resetBtn').textContent = t.resetBtn;
-      document.querySelector('.leaderboard-title').textContent = t.leaderboardTitle;
-      document.getElementById('scoreLabel').textContent = t.scoreLabel;
-      document.getElementById('timeLabel').textContent = t.timeLabel;
-      document.querySelector('.modal-title').textContent = t.congratsTitle;
-      document.querySelector('.modal-content p').textContent = t.enterName;
-      document.querySelector('label[for="playerNameInput"]').textContent = t.playerName;
-      document.getElementById('playerNameInput').placeholder = t.namePlaceholder;
-      document.getElementById('submitNameBtn').textContent = t.saveScore;
-      document.getElementById('languageToggle').textContent = currentLanguage === 'ms' ? 'MS' : 'EN';
-    }
-    
-    function renderMinerals() {
-      const grid = document.getElementById('mineralsGrid');
-      grid.innerHTML = '';
-      
-      currentMinerals.forEach((mineral, index) => {
-        const card = document.createElement('div');
-        card.className = 'mineral-card';
-        card.dataset.index = index;
-        card.dataset.type = mineral.type;
-        
-        card.innerHTML = `
-          <div class="mineral-name">${mineral.name}</div>
-        `;
-        
-        card.addEventListener('click', handleMineralClick);
-        
-        grid.appendChild(card);
-      });
-    }
-    
-    function handleMineralClick(e) {
-      const t = translations[currentLanguage];
-      const card = e.currentTarget;
-      const index = parseInt(card.dataset.index);
-      const mineral = currentMinerals[index];
-      
-      // Start timer on first click
-      if (!timerInterval) {
-        startTimer();
-      }
-      
-      // Remove previous selection
-      document.querySelectorAll('.mineral-card').forEach(c => c.classList.remove('selected'));
-      document.querySelectorAll('.drop-zone').forEach(z => z.classList.add('selecting'));
-      
-      // Select this mineral
-      card.classList.add('selected');
-      selectedMineral = mineral;
-      
-      // Show prompt
-      const prompt = document.getElementById('selectionPrompt');
-      prompt.textContent = t.selectPrompt.replace('{mineral}', mineral.name);
-      prompt.classList.add('show');
-    }
-    
-    function handleZoneClick(e) {
-      const dropZone = e.currentTarget;
-      if (!selectedMineral) return;
-      
-      const zoneType = dropZone.dataset.type;
-      
-      if (zoneType === 'element') {
-        if (!elementDropped.find(m => m.name === selectedMineral.name)) {
-          elementDropped.push(selectedMineral);
-        }
-      } else {
-        if (!compoundDropped.find(m => m.name === selectedMineral.name)) {
-          compoundDropped.push(selectedMineral);
-        }
-      }
-      
-      currentMinerals = currentMinerals.filter(m => m.name !== selectedMineral.name);
-      selectedMineral = null;
-      
-      // Remove selection styling
-      document.querySelectorAll('.mineral-card').forEach(c => c.classList.remove('selected'));
-      document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('selecting'));
-      document.getElementById('selectionPrompt').classList.remove('show');
-      
-      renderMinerals();
-      renderDroppedMinerals();
-    }
-    
-    function renderDroppedMinerals() {
-      const elementContainer = document.getElementById('elementDropped');
-      const compoundContainer = document.getElementById('compoundDropped');
-      
-      elementContainer.innerHTML = '';
-      elementDropped.forEach(mineral => {
-        const div = document.createElement('div');
-        div.className = 'dropped-mineral';
-        div.innerHTML = `
-          <span class="dropped-name">${mineral.name}</span>
-          <button class="remove-btn" onclick="removeMineral('element', '${mineral.name}')">&times;</button>
-        `;
-        elementContainer.appendChild(div);
-      });
-      
-      compoundContainer.innerHTML = '';
-      compoundDropped.forEach(mineral => {
-        const div = document.createElement('div');
-        div.className = 'dropped-mineral';
-        div.innerHTML = `
-          <span class="dropped-name">${mineral.name}</span>
-          <button class="remove-btn" onclick="removeMineral('compound', '${mineral.name}')">&times;</button>
-        `;
-        compoundContainer.appendChild(div);
-      });
-    }
-    
-    function removeMineral(zone, name) {
-      if (zone === 'element') {
-        const mineral = elementDropped.find(m => m.name === name);
-        elementDropped = elementDropped.filter(m => m.name !== name);
-        if (mineral) currentMinerals.push(mineral);
-      } else {
-        const mineral = compoundDropped.find(m => m.name === name);
-        compoundDropped = compoundDropped.filter(m => m.name !== name);
-        if (mineral) currentMinerals.push(mineral);
-      }
-      
-      renderMinerals();
-      renderDroppedMinerals();
-    }
-    
-    function checkAnswers() {
-      const t = translations[currentLanguage];
-      
-      if (elementDropped.length === 0 && compoundDropped.length === 0) {
-        showToast(t.pleasePlace);
-        return;
-      }
-      
-      // Stop timer immediately when checking
-      stopTimer();
-      
-      attempts++;
-      
-      const elementCorrect = elementDropped.every(m => m.type === 'element');
-      const compoundCorrect = compoundDropped.every(m => m.type === 'compound');
-      
-      const feedback = document.getElementById('feedback');
-      const feedbackTitle = document.getElementById('feedbackTitle');
-      const feedbackMessage = document.getElementById('feedbackMessage');
-      
-      // Calculate score based on correct placements
-      let correctCount = 0;
-      elementDropped.forEach(m => {
-        if (m.type === 'element') correctCount++;
-      });
-      compoundDropped.forEach(m => {
-        if (m.type === 'compound') correctCount++;
-      });
-      
-      const earnedPoints = correctCount * 10;
-      score += earnedPoints;
-      document.getElementById('scoreValue').textContent = score;
-      
-      // Highlight wrong items in red
-      const elementContainer = document.getElementById('elementDropped');
-      const compoundContainer = document.getElementById('compoundDropped');
-      
-      elementContainer.querySelectorAll('.dropped-mineral').forEach((div, index) => {
-        if (elementDropped[index].type !== 'element') {
-          div.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-        }
-      });
-      
-      compoundContainer.querySelectorAll('.dropped-mineral').forEach((div, index) => {
-        if (compoundDropped[index].type !== 'compound') {
-          div.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-        }
-      });
-      
-      // Always show name modal to save score
-      feedback.className = 'feedback correct show';
-      if (elementCorrect && compoundCorrect && elementDropped.length + compoundDropped.length === 10) {
-        correct++;
-        feedbackTitle.textContent = t.perfectTitle;
-        feedbackMessage.textContent = `${t.allCorrect} ${formatTime(elapsedSeconds)}`;
-      } else {
-        feedbackTitle.textContent = t.tryAgainTitle;
-        
-        let wrongCount = 0;
-        if (!elementCorrect) wrongCount += elementDropped.filter(m => m.type !== 'element').length;
-        if (!compoundCorrect) wrongCount += compoundDropped.filter(m => m.type !== 'compound').length;
-        
-        const wrongMessage = t.wrongItems.replace('{count}', wrongCount).replace(' Semak semula!', '').replace(' Check again!', '');
-        feedbackMessage.textContent = wrongMessage + ` ${earnedPoints} ${t.points}!`;
-      }
-      
-      setTimeout(() => {
-        feedback.classList.remove('show');
-        document.getElementById('nameModal').classList.add('show');
-      }, 3000);
-    }
-    
-    function resetGame() {
-      const t = translations[currentLanguage];
-      currentMinerals = shuffleArray([...mineralsData[currentLanguage]]);
-      elementDropped = [];
-      compoundDropped = [];
-      
-      // Reset score to 0
-      score = 0;
-      correct = 0;
-      attempts = 0;
-      selectedMineral = null;
-      
-      renderMinerals();
-      renderDroppedMinerals();
-      
-      document.getElementById('feedback').classList.remove('show');
-      document.getElementById('selectionPrompt').classList.remove('show');
-      document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('selecting'));
-      
-      // Reset timer but don't start yet
-      stopTimer();
-      elapsedSeconds = 0;
-      updateTimerDisplay();
-      
-      // Update score display to show 0
-      document.getElementById('scoreValue').textContent = score;
-    }
-    
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-    
-    async function saveScore() {
-      const t = translations[currentLanguage];
-      const nameInput = document.getElementById('playerNameInput');
-      const playerName = nameInput.value.trim();
-      
-      if (!playerName) {
-        showToast(t.enterNamePrompt);
-        return;
-      }
-      
-      const submitBtn = document.getElementById('submitNameBtn');
-      submitBtn.disabled = true;
-      submitBtn.textContent = t.saving;
-      
-      try {
-        let ok = false;
-        if (window.dataSdk && typeof window.dataSdk.create === 'function') {
-          const result = await window.dataSdk.create({
-            nama_pemain: playerName,
-            skor: score,
-            masa_saat: elapsedSeconds,
-            tahap: 'Sempurna',
-            masa_selesai: new Date().toISOString()
-          });
-          ok = !!result?.isOk;
-        }
-        
-        if (!ok) {
-          const entry = {
-            nama_pemain: playerName,
-            skor: score,
-            masa_saat: elapsedSeconds,
-            tahap: 'Sempurna',
-            masa_selesai: new Date().toISOString()
-          };
-          const raw = localStorage.getItem('mineral_leaderboard');
-          const list = raw ? JSON.parse(raw) : [];
-          list.push(entry);
-          localStorage.setItem('mineral_leaderboard', JSON.stringify(list));
-          renderLeaderboard(list);
-        }
-        
-        submitBtn.disabled = false;
-        submitBtn.textContent = t.saveScore;
-        showToast(t.scoreSaved);
-        document.getElementById('nameModal').classList.remove('show');
-        nameInput.value = '';
-        resetGame();
-      } catch (error) {
-        const entry = {
-          nama_pemain: playerName,
-          skor: score,
-          masa_saat: elapsedSeconds,
-          tahap: 'Sempurna',
-          masa_selesai: new Date().toISOString()
+        const defaultConfig = {
+            main_title: "Kebangkitan Nasionalisme Asia Tenggara",
+            subtitle: "Sejarah Perjuangan Kemerdekaan",
+            primary_color: "#667eea",
+            secondary_color: "#764ba2",
+            background_color: "#ffffff",
+            text_color: "#2d3748",
+            accent_color: "#f7fafc",
+            font_family: "Segoe UI",
+            font_size: 16
         };
-        const raw = localStorage.getItem('mineral_leaderboard');
-        const list = raw ? JSON.parse(raw) : [];
-        list.push(entry);
-        localStorage.setItem('mineral_leaderboard', JSON.stringify(list));
-        renderLeaderboard(list);
-        
-        submitBtn.disabled = false;
-        submitBtn.textContent = t.saveScore;
-        showToast(t.scoreSaved);
-        document.getElementById('nameModal').classList.remove('show');
-        nameInput.value = '';
-        resetGame();
-      }
-    }
-    
-    function renderLeaderboard(data) {
-      const t = translations[currentLanguage];
-      leaderboardData = data;
-      const sorted = [...data].sort((a, b) => b.skor - a.skor).slice(0, 10);
-      const list = document.getElementById('leaderboardList');
-      
-      if (sorted.length === 0) {
-        list.innerHTML = `<p style="text-align: center; color: #9ca3af;">${t.noRecords}</p>`;
-        return;
-      }
-      
-      list.innerHTML = '';
-      sorted.forEach((entry, index) => {
-        const item = document.createElement('div');
-        item.className = 'leaderboard-item';
-        const timeText = entry.masa_saat ? ` (${formatTime(entry.masa_saat)})` : '';
-        item.innerHTML = `
-          <span class="player-name">${index + 1}. ${entry.nama_pemain}</span>
-          <span class="player-score">${entry.skor} ${t.points}${timeText}</span>
-        `;
-        list.appendChild(item);
-      });
-    }
-    
-    async function onConfigChange(config) {
-      const baseFont = config.font_family || defaultConfig.font_family;
-      const baseFontStack = 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif';
-      const baseSize = config.font_size || defaultConfig.font_size;
-      
-      document.body.style.fontFamily = `${baseFont}, ${baseFontStack}`;
-      
-      const wrapper = document.querySelector('.game-wrapper');
-      wrapper.style.background = `linear-gradient(135deg, ${config.background_color || defaultConfig.background_color} 0%, ${config.primary_action_color || defaultConfig.primary_action_color} 100%)`;
-      
-      document.getElementById('gameTitle').textContent = config.tajuk_permainan || defaultConfig.tajuk_permainan;
-      document.getElementById('gameTitle').style.fontSize = `${baseSize * 2.5}px`;
-      
-      document.getElementById('instructions').textContent = config.arahan_permainan || defaultConfig.arahan_permainan;
-      document.getElementById('instructions').style.fontSize = `${baseSize * 1.1}px`;
-      
-      const zoneTitles = document.querySelectorAll('.zone-title');
-      zoneTitles.forEach(title => {
-        title.style.fontSize = `${baseSize * 1.4}px`;
-        title.style.color = config.background_color || defaultConfig.background_color;
-        title.style.borderBottomColor = config.background_color || defaultConfig.background_color;
-      });
-      
-      const mineralCards = document.querySelectorAll('.mineral-card');
-      mineralCards.forEach(card => {
-        card.style.background = `linear-gradient(135deg, ${config.background_color || defaultConfig.background_color} 0%, ${config.primary_action_color || defaultConfig.primary_action_color} 100%)`;
-      });
-      
-      const droppedMinerals = document.querySelectorAll('.dropped-mineral');
-      droppedMinerals.forEach(mineral => {
-        mineral.style.background = `linear-gradient(135deg, ${config.background_color || defaultConfig.background_color} 0%, ${config.primary_action_color || defaultConfig.primary_action_color} 100%)`;
-      });
-      
-      const checkBtn = document.getElementById('checkBtn');
-      checkBtn.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
-      
-      const resetBtn = document.getElementById('resetBtn');
-      resetBtn.style.backgroundColor = config.secondary_action_color || defaultConfig.secondary_action_color;
-    }
-    
-    const dataHandler = {
-      onDataChanged(data) {
-        renderLeaderboard(data);
-      }
-    };
-    
-    document.addEventListener('DOMContentLoaded', async () => {
-      if (window.dataSdk) {
-        const initResult = await window.dataSdk.init(dataHandler);
-        if (!initResult.isOk) {
-          console.error('Failed to initialize data SDK');
-        }
-      }
-      
-      if (!window.dataSdk) {
-        const raw = localStorage.getItem('mineral_leaderboard');
-        const list = raw ? JSON.parse(raw) : [];
-        renderLeaderboard(list);
-      }
-      
-      if (window.elementSdk) {
-        window.elementSdk.init({
-          defaultConfig,
-          onConfigChange,
-          mapToCapabilities: (config) => ({
-            recolorables: [
-              {
-                get: () => config.background_color || defaultConfig.background_color,
-                set: (value) => {
-                  config.background_color = value;
-                  window.elementSdk.setConfig({ background_color: value });
-                }
-              },
-              {
-                get: () => config.surface_color || defaultConfig.surface_color,
-                set: (value) => {
-                  config.surface_color = value;
-                  window.elementSdk.setConfig({ surface_color: value });
-                }
-              },
-              {
-                get: () => config.text_color || defaultConfig.text_color,
-                set: (value) => {
-                  config.text_color = value;
-                  window.elementSdk.setConfig({ text_color: value });
-                }
-              },
-              {
-                get: () => config.primary_action_color || defaultConfig.primary_action_color,
-                set: (value) => {
-                  config.primary_action_color = value;
-                  window.elementSdk.setConfig({ primary_action_color: value });
-                }
-              },
-              {
-                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-                set: (value) => {
-                  config.secondary_action_color = value;
-                  window.elementSdk.setConfig({ secondary_action_color: value });
-                }
-              }
-            ],
-            borderables: [],
-            fontEditable: {
-              get: () => config.font_family || defaultConfig.font_family,
-              set: (value) => {
-                config.font_family = value;
-                window.elementSdk.setConfig({ font_family: value });
-              }
+
+        const countriesData = [
+            {
+                name: "Filipina",
+                flagSrc: "flags/ph.svg",
+                leaders: ["José Rizal", "Andres Bonifacio", "Emilio Aguinaldo"],
+                causes: [
+                    "Penindasan dan diskriminasi penjajah Sepanyol",
+                    "Golongan intelektual menuntut hak sama rata"
+                ],
+                developments: [
+                    "Gerakan Propaganda oleh José Rizal tetapi gagal",
+                    "Penubuhan Katipunan oleh Bonifacio (gerakan revolusi) untuk memperoleh kemerdekaan tetapi gagal",
+                    "Aguinaldo kemudian bekerjasama dengan Amerika Syarikat dan berjaya mengusir Sepanyol",
+                    "Perisytiharaan Kemerdekaan Filipina tidak diiktiraf oleh Amerika Syarikat",
+                    "Golongan nasionalis mengubah strategi perjuangan melalui parti politik sederhana"
+                ]
             },
-            fontSizeable: {
-              get: () => config.font_size || defaultConfig.font_size,
-              set: (value) => {
-                config.font_size = value;
-                window.elementSdk.setConfig({ font_size: value });
-              }
+            {
+                name: "Burma",
+                flagSrc: "flags/mm.svg",
+                leaders: ["Aung San", "Kyaw Nein", "U Nu"],
+                causes: [
+                    "Ketidakpuasan terhadap pentadbiran British",
+                    "Campur tangan dalam institusi agama Buddha",
+                    "Terbeban dengan cukai"
+                ],
+                developments: [
+                    "Penubuhan Persatuan Belia Buddha yang menggunakan isu kasut untuk membangkitkan nasionalisme",
+                    "Revolusi Pelajar menuntut pertubuhan universiti",
+                    "Majlis Am Sangha Samagyi mencetuskan Pemberontakan Saya San",
+                    "Perlembagaan Burma 1935 memisahkan Burma dengan India yang merangsang perjuangan berkerajaan sendiri",
+                    "Penubuhan Parti Do Bama Asiayone untuk memperjuangkan kemerdekaan"
+                ]
+            },
+            {
+                name: "Vietnam",
+                flagSrc: "flags/vn.svg",
+                leaders: ["Nguyen Thai Hoc", "Ho Chi Minh"],
+                causes: [
+                    "Penindasan ekonomi, politik dan sosial oleh Perancis",
+                    "Pengaruh idea moden dan semangat anti-penjajahan"
+                ],
+                developments: [
+                    "Penubuhan parti aliran nasionalisme seperti Viet Nam Quoc Dang Dang (VNQDD) dan kemudiannya aliran komunisme seperti Parti Komunis Vietnam (PKV)",
+                    "VNQDD melancarkan pemberontakan tetapi gagal",
+                    "Ho Chi Minh memimpin PKV menentang Perancis",
+                    "Vietnam Utara mencapai kemerdekaan pada tahun 1945",
+                    "Republik Vietnam terbentuk pada tahun 1976"
+                ]
+            },
+            {
+                name: "Indonesia",
+                flagSrc: "flags/id.svg",
+                leaders: ["Raden Ajeng Kartini", "Soekarno"],
+                causes: [
+                    "Diskriminasi dan penindasan oleh Belanda",
+                    "Layanan tidak adil terhadap rakyat tempatan",
+                    "Pendidikan Barat melahirkan golongan berpendidikan"
+                ],
+                developments: [
+                    "Raden Adjeng Kartini memajukan pendidikan kaum wanita dan menerbitkan buku Habis Gelap Terbitlah Terang",
+                    "Penubuhan Muhammadiyah untuk mempertahankan agama Islam daripada sekularisme Barat",
+                    "Penubuhan Sarekat Islam, Partai Komunis Indonesia (PKI) dan Partai Nasionalis Indonesia (PNI) untuk memperjuangkan kemerdekaan",
+                    "Ikrar 'Sumpah Pemuda' mengukuhkan perpaduan nasional",
+                    "Soekarno membentuk Permuafakatan Perhimpunan Politik Kebangsaan Indonesia (PPPKI) untuk memperjuangkan kemerdekaan"
+                ]
+            },
+            {
+                name: "Thailand",
+                flagSrc: "flags/th.svg",
+                leaders: ["Raja Mongkut", "Raja Chulalongkorn", "Phibulsongkram"],
+                causes: [
+                    "Ancaman imperialisme Barat di rantau Asia Tenggara",
+                    "Keinginan mempertahankan kemerdekaan",
+                    "Menuntut penglibatan rakyat dalam pemerintahan"
+                ],
+                developments: [
+                    "Raja Mongkut dan Raja Chulalongkorn melakukan pemodenan dan mengamalkan dasar terbuka",
+                    "Revolusi Thai berlaku akibat kelemahan Raja Vajiravudh",
+                    "Pemerintahan raja berkuasa mutlak ditamatkan dan pemerintahan raja berperlembagaan diperkenalkan",
+                    "Phibulsongkram (perdana menteri) meluluskan undang-undang menyekat penguasaan ekonomi orang Cina",
+                    "Dasar bekerjasama dengan Jepun menyebabkan Thailand tidak dijajah ketika Perang Dunia Kedua"
+                ]
             }
-          }),
-          mapToEditPanelValues: (config) => new Map([
-            ['tajuk_permainan', config.tajuk_permainan || defaultConfig.tajuk_permainan],
-            ['arahan_permainan', config.arahan_permainan || defaultConfig.arahan_permainan]
-          ])
-        });
-      }
-      
-      const dropZones = document.querySelectorAll('.drop-zone');
-      dropZones.forEach(zone => {
-        zone.addEventListener('click', handleZoneClick);
-      });
-      
-      document.getElementById('checkBtn').addEventListener('click', checkAnswers);
-      document.getElementById('resetBtn').addEventListener('click', resetGame);
-      document.getElementById('submitNameBtn').addEventListener('click', saveScore);
-      document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
-      
-      window.removeMineral = removeMineral;
-      
-      // Don't start timer yet - wait for first click
-      resetGame();
-    });
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a77cb35431338f8',t:'MTc2NDY0NjczMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+        ];
+
+        function renderCountries(config) {
+            const grid = document.getElementById('countriesGrid');
+            grid.innerHTML = '';
+
+            countriesData.forEach((country, index) => {
+                const card = document.createElement('div');
+                card.className = 'country-card';
+                card.style.fontFamily = `${config.font_family || defaultConfig.font_family}, Tahoma, Geneva, Verdana, sans-serif`;
+
+                const detailsId = `details-${index}`;
+
+                card.innerHTML = `
+                    <button class="country-button" onclick="toggleCountry('${detailsId}')" style="border-color: ${config.primary_color || defaultConfig.primary_color}; font-family: ${config.font_family || defaultConfig.font_family}, Tahoma, Geneva, Verdana, sans-serif;">
+                        <div class="country-button-content">
+                            <img class="country-flag" src="${country.flagSrc}" alt="Bendera ${country.name}" />
+                            <div class="country-name" style="color: ${config.text_color || defaultConfig.text_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 1.75}px;">${country.name}</div>
+                        </div>
+                        <span class="arrow" style="color: ${config.primary_color || defaultConfig.primary_color};">▼</span>
+                    </button>
+
+                    <div id="${detailsId}" class="country-details">
+                        <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <div class="section">
+                                <div class="section-title" style="color: ${config.primary_color || defaultConfig.primary_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 1.125}px;">
+                                    <span class="section-icon">👤</span> Tokoh Penting
+                                </div>
+                                ${country.leaders.map(leader => 
+                                    `<div class="leader-item" style="background: ${config.accent_color || defaultConfig.accent_color}; border-left-color: ${config.primary_color || defaultConfig.primary_color}; font-size: ${config.font_size || defaultConfig.font_size}px; color: ${config.text_color || defaultConfig.text_color};">${leader}</div>`
+                                ).join('')}
+                            </div>
+
+                            <div class="section">
+                                <div class="section-title" style="color: ${config.primary_color || defaultConfig.primary_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 1.125}px;">
+                                    <span class="section-icon">⚡</span> Punca Kebangkitan
+                                </div>
+                                ${country.causes.map(cause => 
+                                    `<div class="leader-item" style="background: ${config.accent_color || defaultConfig.accent_color}; border-left-color: ${config.primary_color || defaultConfig.primary_color}; font-size: ${config.font_size || defaultConfig.font_size}px; color: ${config.text_color || defaultConfig.text_color};">${cause}</div>`
+                                ).join('')}
+                            </div>
+
+                            <div class="section">
+                                <div class="section-title" style="color: ${config.primary_color || defaultConfig.primary_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 1.125}px;">
+                                    <span class="section-icon">📚</span> Perkembangan Nasionalisme
+                                </div>
+                                ${country.developments.map(dev => 
+                                    `<div class="timeline-item" style="border-left-color: ${config.primary_color || defaultConfig.primary_color};">
+                                        <p style="margin: 0; font-size: ${config.font_size || defaultConfig.font_size}px; color: ${config.text_color || defaultConfig.text_color};">${dev}</p>
+                                    </div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+
+
+        async function onConfigChange(config) {
+            const mainTitle = document.getElementById('mainTitle');
+            const subtitle = document.getElementById('subtitle');
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFontStack = 'Tahoma, Geneva, Verdana, sans-serif';
+
+            mainTitle.textContent = config.main_title || defaultConfig.main_title;
+            subtitle.textContent = config.subtitle || defaultConfig.subtitle;
+
+            mainTitle.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            subtitle.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            mainTitle.style.fontSize = `${(config.font_size || defaultConfig.font_size) * 3}px`;
+            subtitle.style.fontSize = `${(config.font_size || defaultConfig.font_size) * 1.5}px`;
+
+            document.body.style.background = `linear-gradient(135deg, ${config.primary_color || defaultConfig.primary_color} 0%, ${config.secondary_color || defaultConfig.secondary_color} 100%)`;
+
+            renderCountries(config);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
+                                config.primary_color = value;
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.secondary_color || defaultConfig.secondary_color,
+                            set: (value) => {
+                                config.secondary_color = value;
+                                window.elementSdk.setConfig({ secondary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.accent_color || defaultConfig.accent_color,
+                            set: (value) => {
+                                config.accent_color = value;
+                                window.elementSdk.setConfig({ accent_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["main_title", config.main_title || defaultConfig.main_title],
+                    ["subtitle", config.subtitle || defaultConfig.subtitle]
+                ])
+            });
+        }
+
+        function toggleCountry(id) {
+            const details = document.getElementById(id);
+            details.classList.toggle('show');
+        }
+
+        renderCountries(defaultConfig);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a89de95572c6b5d',t:'MTc2NDgzNjI2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
