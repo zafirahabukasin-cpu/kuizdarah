@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="ms" class="h-full">
  <head>
   <meta charset="UTF-8">
@@ -43,8 +43,8 @@
         }
         
         .letter-box.active {
-            border-color: #3b82f6;
-            background: #dbeafe;
+            border-color: #06b6d4;
+            background: #cffafe;
             transform: scale(1.05);
         }
         
@@ -79,46 +79,90 @@
             height: 100%;
             width: 100%;
             overflow: auto;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
         }
         
         .content {
-            min-height: 100%;
-            padding: 24px 12px;
+            height: 100%;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 768px) {
+            .content {
+                padding: 20px;
+            }
         }
         
         .max-width {
-            max-width: 896px;
+            max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 1024px) {
+            .max-width {
+                display: grid;
+                grid-template-columns: 1fr 250px;
+                gap: 20px;
+                align-items: stretch;
+            }
+        }
+        
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        @media (min-width: 1024px) {
+            .right-column {
+                position: sticky;
+                top: 20px;
+            }
         }
         
         .header {
             text-align: center;
-            margin-bottom: 16px;
+            flex-shrink: 0;
         }
         
         .main-title {
             color: white;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         @media (min-width: 768px) {
             .main-title {
-                font-size: 36px;
+                font-size: 32px;
+                margin-bottom: 8px;
             }
         }
         
         .instruction {
             color: white;
-            font-size: 14px;
-            margin-bottom: 12px;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
         
         @media (min-width: 768px) {
             .instruction {
-                font-size: 18px;
+                font-size: 16px;
+                margin-bottom: 10px;
             }
         }
         
@@ -131,50 +175,50 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border: none;
             cursor: pointer;
-            color: #667eea;
+            color: #06b6d4;
         }
         
         .progress-card {
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 12px 16px;
+            flex-shrink: 0;
         }
         
         .progress-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         .progress-label {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #4b5563;
         }
         
         .progress-count {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            color: #667eea;
+            color: #06b6d4;
         }
         
         .progress-bar-bg {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: #e5e7eb;
             border-radius: 999px;
             overflow: hidden;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         
         .progress-bar-fill {
             height: 100%;
             border-radius: 999px;
             transition: all 0.5s;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
             width: 10%;
         }
         
@@ -182,132 +226,199 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         .timer-label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #4b5563;
         }
         
         .timer-value {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
-            color: #667eea;
+            color: #06b6d4;
         }
         
         .question-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 14px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             padding: 16px;
-            margin-bottom: 16px;
+            flex-shrink: 0;
+            flex-grow: 0;
         }
         
         @media (min-width: 768px) {
             .question-card {
-                padding: 24px;
+                padding: 20px;
             }
         }
         
         .category-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             text-align: center;
             color: #ef4444;
         }
         
         @media (min-width: 768px) {
             .category-title {
-                font-size: 32px;
+                font-size: 28px;
+                margin-bottom: 14px;
             }
         }
         
         .question-text {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: #374151;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             text-align: center;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         
         @media (min-width: 768px) {
             .question-text {
-                font-size: 18px;
+                font-size: 17px;
+                margin-bottom: 14px;
             }
         }
         
         .reset-container {
             text-align: center;
-            margin-top: 24px;
-            margin-bottom: 32px;
+            margin-top: 0;
         }
         
         .reset-btn {
             background: white;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            padding: 12px 32px;
-            border-radius: 16px;
+            padding: 10px 24px;
+            border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border: none;
             cursor: pointer;
-            color: #667eea;
+            color: #06b6d4;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.2s;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        .reset-btn:active {
+            transform: translateY(0);
         }
         
         .keyboard-container {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            padding: 10px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+        }
+        
+        @media (min-width: 768px) {
+            .keyboard-container {
+                padding: 16px;
+            }
         }
         
         .keyboard-row {
             display: flex;
             justify-content: center;
-            gap: 6px;
-            margin-bottom: 8px;
+            gap: 3px;
+            margin-bottom: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .keyboard-row {
+                gap: 6px;
+                margin-bottom: 8px;
+            }
+        }
+        
+        .keyboard-row:last-child {
+            margin-bottom: 0;
         }
         
         .key-btn {
-            background: #f3f4f6;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 12px;
-            min-width: 32px;
-            font-size: 16px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 12px 6px;
+            min-width: 26px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
-            color: #374151;
+            transition: all 0.15s;
+            color: #495057;
             -webkit-user-select: none;
             user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            max-width: 34px;
+        }
+        
+        @media (min-width: 640px) {
+            .key-btn {
+                padding: 14px 10px;
+                font-size: 15px;
+                max-width: 46px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .key-btn {
+                padding: 16px 12px;
+                font-size: 17px;
+                max-width: 56px;
+                border-radius: 8px;
+            }
         }
         
         .key-btn:active {
-            background: #667eea;
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
             color: white;
             transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
         .key-btn.space-key {
-            flex: 1;
-            max-width: 200px;
+            flex: 3;
+            max-width: none;
+            font-size: 13px;
+        }
+        
+        @media (min-width: 640px) {
+            .key-btn.space-key {
+                font-size: 14px;
+            }
         }
         
         .key-btn.backspace-key {
-            min-width: 70px;
-            background: #fee2e2;
-            border-color: #fecaca;
+            flex: 2;
+            max-width: none;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
             color: #dc2626;
+            font-size: 12px;
+        }
+        
+        @media (min-width: 640px) {
+            .key-btn.backspace-key {
+                font-size: 13px;
+            }
         }
         
         .key-btn.backspace-key:active {
-            background: #dc2626;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
             color: white;
         }
     </style>
@@ -318,50 +429,54 @@
  <body>
   <div id="app" class="container">
    <div class="content">
-    <div class="max-width"><!-- Header -->
-     <div class="header">
-      <h1 id="mainTitle" class="main-title">🧪 Acid &amp; Alkali Game 🧪</h1>
-      <p id="instructionText" class="instruction">Type the correct answer for each question!</p><button id="langToggle" class="lang-btn"> 🌐 Bahasa Melayu </button>
-     </div><!-- Progress -->
-     <div class="progress-card">
-      <div class="progress-header">
-       <div class="progress-label" id="questionLabel">
-        Question
+    <div class="max-width"><!-- Left Column (Desktop) / Top Section (Mobile) -->
+     <div class="left-column"><!-- Header -->
+      <div class="header">
+       <h1 id="mainTitle" class="main-title">🧪 Acid &amp; Alkali Game 🧪</h1>
+       <p id="instructionText" class="instruction">Type the correct answer for each question!</p><button id="langToggle" class="lang-btn"> 🌐 Bahasa Melayu </button>
+      </div><!-- Progress -->
+      <div class="progress-card">
+       <div class="progress-header">
+        <div class="progress-label" id="questionLabel">
+         Question
+        </div>
+        <div id="progress" class="progress-count">
+         1/10
+        </div>
        </div>
-       <div id="progress" class="progress-count">
-        1/10
+       <div class="progress-bar-bg">
+        <div id="progressBar" class="progress-bar-fill"></div>
+       </div>
+       <div class="timer-row">
+        <div class="timer-label" id="timeLabel">
+         ⏱️ Time:
+        </div>
+        <div id="timer" class="timer-value">
+         0s
+        </div>
+       </div>
+      </div><!-- Question -->
+      <div class="question-card">
+       <div id="categoryTitle" class="category-title">
+        🔴 ACID
+       </div>
+       <div id="questionText" class="question-text"></div>
+       <div id="answerRow" class="answer-row"></div>
+      </div><!-- Virtual Keyboard -->
+      <div class="keyboard-container">
+       <div class="keyboard-row"><button class="key-btn" data-key="q">q</button> <button class="key-btn" data-key="w">w</button> <button class="key-btn" data-key="e">e</button> <button class="key-btn" data-key="r">r</button> <button class="key-btn" data-key="t">t</button> <button class="key-btn" data-key="y">y</button> <button class="key-btn" data-key="u">u</button> <button class="key-btn" data-key="i">i</button> <button class="key-btn" data-key="o">o</button> <button class="key-btn" data-key="p">p</button>
+       </div>
+       <div class="keyboard-row"><button class="key-btn" data-key="a">a</button> <button class="key-btn" data-key="s">s</button> <button class="key-btn" data-key="d">d</button> <button class="key-btn" data-key="f">f</button> <button class="key-btn" data-key="g">g</button> <button class="key-btn" data-key="h">h</button> <button class="key-btn" data-key="j">j</button> <button class="key-btn" data-key="k">k</button> <button class="key-btn" data-key="l">l</button>
+       </div>
+       <div class="keyboard-row"><button class="key-btn" data-key="z">z</button> <button class="key-btn" data-key="x">x</button> <button class="key-btn" data-key="c">c</button> <button class="key-btn" data-key="v">v</button> <button class="key-btn" data-key="b">b</button> <button class="key-btn" data-key="n">n</button> <button class="key-btn" data-key="m">m</button>
+       </div>
+       <div class="keyboard-row"><button class="key-btn space-key" data-key=" ">SPACE</button> <button class="key-btn backspace-key" data-key="backspace">⌫ DELETE</button>
        </div>
       </div>
-      <div class="progress-bar-bg">
-       <div id="progressBar" class="progress-bar-fill"></div>
+     </div><!-- Right Column (Desktop Sidebar) / Bottom Section (Mobile) -->
+     <div class="right-column"><!-- Reset Button -->
+      <div class="reset-container"><button id="resetBtn" class="reset-btn"> 🔄 <span id="resetBtnText">Restart</span> </button>
       </div>
-      <div class="timer-row">
-       <div class="timer-label" id="timeLabel">
-        ⏱️ Time:
-       </div>
-       <div id="timer" class="timer-value">
-        0s
-       </div>
-      </div>
-     </div><!-- Question -->
-     <div class="question-card">
-      <div id="categoryTitle" class="category-title">
-       🔴 ACID
-      </div>
-      <div id="questionText" class="question-text"></div>
-      <div id="answerRow" class="answer-row"></div>
-     </div><!-- Virtual Keyboard -->
-     <div class="keyboard-container">
-      <div class="keyboard-row"><button class="key-btn" data-key="q">q</button> <button class="key-btn" data-key="w">w</button> <button class="key-btn" data-key="e">e</button> <button class="key-btn" data-key="r">r</button> <button class="key-btn" data-key="t">t</button> <button class="key-btn" data-key="y">y</button> <button class="key-btn" data-key="u">u</button> <button class="key-btn" data-key="i">i</button> <button class="key-btn" data-key="o">o</button> <button class="key-btn" data-key="p">p</button>
-      </div>
-      <div class="keyboard-row"><button class="key-btn" data-key="a">a</button> <button class="key-btn" data-key="s">s</button> <button class="key-btn" data-key="d">d</button> <button class="key-btn" data-key="f">f</button> <button class="key-btn" data-key="g">g</button> <button class="key-btn" data-key="h">h</button> <button class="key-btn" data-key="j">j</button> <button class="key-btn" data-key="k">k</button> <button class="key-btn" data-key="l">l</button>
-      </div>
-      <div class="keyboard-row"><button class="key-btn" data-key="z">z</button> <button class="key-btn" data-key="x">x</button> <button class="key-btn" data-key="c">c</button> <button class="key-btn" data-key="v">v</button> <button class="key-btn" data-key="b">b</button> <button class="key-btn" data-key="n">n</button> <button class="key-btn" data-key="m">m</button>
-      </div>
-      <div class="keyboard-row"><button class="key-btn space-key" data-key=" ">SPACE</button> <button class="key-btn backspace-key" data-key="backspace">⌫ DELETE</button>
-      </div>
-     </div><!-- Reset Button -->
-     <div class="reset-container"><button id="resetBtn" class="reset-btn"> 🔄 <span id="resetBtnText">Restart</span> </button>
      </div>
     </div>
    </div>
@@ -370,7 +485,7 @@
         const defaultConfig = {
             main_title: "🧪 Permainan Asid dan Alkali 🧪",
             instruction_text: "Taip jawapan yang betul untuk setiap soalan!",
-            primary_color: "#667eea",
+            primary_color: "#06b6d4",
             secondary_color: "#ffffff"
         };
 
@@ -685,7 +800,8 @@
             const timeDisplay = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
             
             const correctCount = gameState.correctAnswers;
-            const wrongCount = 10 - correctCount;
+            const totalQuestions = allQuestions.length;
+            const wrongCount = totalQuestions - correctCount;
             
             let motivationMessage = '';
             let emoji = '';
@@ -694,17 +810,19 @@
             let timeLabel = '';
             let playAgainBtn = '';
             
+            const percentage = (correctCount / totalQuestions) * 100;
+            
             if (currentLanguage === 'BM') {
-                if (correctCount === 10) {
+                if (percentage === 100) {
                     emoji = '🏆';
                     motivationMessage = 'SEMPURNA! Anda seorang genius! 100% betul!';
-                } else if (correctCount >= 8) {
+                } else if (percentage >= 80) {
                     emoji = '🌟';
                     motivationMessage = 'Hebat sekali! Prestasi yang cemerlang!';
-                } else if (correctCount >= 6) {
+                } else if (percentage >= 60) {
                     emoji = '👍';
                     motivationMessage = 'Bagus! Teruskan usaha anda!';
-                } else if (correctCount >= 4) {
+                } else if (percentage >= 40) {
                     emoji = '💪';
                     motivationMessage = 'Boleh buat! Cuba lagi untuk skor lebih tinggi!';
                 } else {
@@ -716,16 +834,16 @@
                 timeLabel = 'Masa';
                 playAgainBtn = '🔄 Main Lagi';
             } else {
-                if (correctCount === 10) {
+                if (percentage === 100) {
                     emoji = '🏆';
                     motivationMessage = 'PERFECT! You are a genius! 100% correct!';
-                } else if (correctCount >= 8) {
+                } else if (percentage >= 80) {
                     emoji = '🌟';
                     motivationMessage = 'Excellent! Outstanding performance!';
-                } else if (correctCount >= 6) {
+                } else if (percentage >= 60) {
                     emoji = '👍';
                     motivationMessage = 'Good! Keep up the effort!';
-                } else if (correctCount >= 4) {
+                } else if (percentage >= 40) {
                     emoji = '💪';
                     motivationMessage = 'You can do it! Try again for a higher score!';
                 } else {
@@ -745,7 +863,7 @@
             message.style.cssText = 'background: white; padding: 32px 24px; border-radius: 24px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 100%;';
             message.innerHTML = `
                 <div style="font-size: 64px; margin-bottom: 16px;">${emoji}</div>
-                <div style="font-size: 22px; font-weight: 800; color: #667eea; margin-bottom: 24px; line-height: 1.3;">${motivationMessage}</div>
+                <div style="font-size: 22px; font-weight: 800; color: #06b6d4; margin-bottom: 24px; line-height: 1.3;">${motivationMessage}</div>
                 <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
                     <div style="background: #dcfce7; padding: 16px 24px; border-radius: 12px; min-width: 100px;">
                         <div style="font-size: 12px; color: #16a34a; font-weight: 600; margin-bottom: 4px;">${correctLabel}</div>
@@ -757,7 +875,7 @@
                     </div>
                 </div>
                 <div style="font-size: 16px; color: #6b7280; margin-bottom: 24px;">⏱️ ${timeLabel}: ${timeDisplay}</div>
-                <button onclick="this.parentElement.parentElement.remove(); initGame();" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; font-weight: 700; padding: 14px 40px; border-radius: 16px; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">${playAgainBtn}</button>
+                <button onclick="this.parentElement.parentElement.remove(); initGame();" style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); color: white; font-size: 16px; font-weight: 700; padding: 14px 40px; border-radius: 16px; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">${playAgainBtn}</button>
             `;
             
             overlay.appendChild(message);
@@ -766,9 +884,10 @@
 
         function updateProgress() {
             const currentQuestion = gameState.currentQuestionIndex + 1;
-            document.getElementById('progress').textContent = `${currentQuestion}/10`;
+            const totalQuestions = allQuestions.length;
+            document.getElementById('progress').textContent = `${currentQuestion}/${totalQuestions}`;
             const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = `${(currentQuestion / 10) * 100}%`;
+            progressBar.style.width = `${(currentQuestion / totalQuestions) * 100}%`;
         }
 
         async function onConfigChange(config) {
@@ -782,7 +901,7 @@
             const primaryColor = config.primary_color || defaultConfig.primary_color;
             const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
             
-            document.getElementById('app').style.background = `linear-gradient(135deg, ${primaryColor} 0%, #764ba2 100%)`;
+            document.getElementById('app').style.background = `linear-gradient(135deg, ${primaryColor} 0%, #3b82f6 100%)`;
             resetBtn.style.background = secondaryColor;
             resetBtn.style.color = primaryColor;
             
@@ -793,7 +912,7 @@
             
             const progressBar = document.getElementById('progressBar');
             if (progressBar) {
-                progressBar.style.background = `linear-gradient(135deg, ${primaryColor} 0%, #764ba2 100%)`;
+                progressBar.style.background = `linear-gradient(135deg, ${primaryColor} 0%, #3b82f6 100%)`;
             }
             
             const progressText = document.getElementById('progress');
@@ -871,5 +990,5 @@
 
         initGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b2547f0421a8b74',t:'MTc2NjQ2NTg3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b25bc5773c7c786',t:'MTc2NjQ3MDY0NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
