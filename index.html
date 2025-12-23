@@ -74,56 +74,6 @@
             margin: 20px 0;
         }
         
-        .keyboard {
-            background: white;
-            padding: 12px;
-            border-radius: 16px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-        }
-        
-        .keyboard-row {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-        
-        .key {
-            background: #f3f4f6;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 12px;
-            min-width: 32px;
-            font-size: 16px;
-            font-weight: 700;
-            text-align: center;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.1s ease;
-            flex: 1;
-            max-width: 45px;
-        }
-        
-        .key:active {
-            transform: scale(0.95);
-            background: #e5e7eb;
-        }
-        
-        .key.wide {
-            flex: 2;
-            max-width: 90px;
-        }
-        
-        .key.space {
-            flex: 4;
-        }
-        
-        .key.backspace {
-            background: #fee2e2;
-            border-color: #fca5a5;
-            color: #dc2626;
-        }
-        
         /* Pure CSS Styling */
         .container {
             height: 100%;
@@ -293,6 +243,7 @@
         .reset-container {
             text-align: center;
             margin-top: 24px;
+            margin-bottom: 32px;
         }
         
         .reset-btn {
@@ -316,13 +267,13 @@
    <div class="content">
     <div class="max-width"><!-- Header -->
      <div class="header">
-      <h1 id="mainTitle" class="main-title">🧪 Permainan Asid &amp; Alkali 🧪</h1>
-      <p id="instructionText" class="instruction">Taip jawapan yang betul untuk setiap soalan!</p><button id="langToggle" class="lang-btn"> 🌐 English </button>
+      <h1 id="mainTitle" class="main-title">🧪 Acid &amp; Alkali Game 🧪</h1>
+      <p id="instructionText" class="instruction">Type the correct answer for each question!</p><button id="langToggle" class="lang-btn"> 🌐 Bahasa Melayu </button>
      </div><!-- Progress -->
      <div class="progress-card">
       <div class="progress-header">
        <div class="progress-label" id="questionLabel">
-        Soalan
+        Question
        </div>
        <div id="progress" class="progress-count">
         1/10
@@ -333,7 +284,7 @@
       </div>
       <div class="timer-row">
        <div class="timer-label" id="timeLabel">
-        ⏱️ Masa:
+        ⏱️ Time:
        </div>
        <div id="timer" class="timer-value">
         0s
@@ -342,114 +293,20 @@
      </div><!-- Question -->
      <div class="question-card">
       <div id="categoryTitle" class="category-title">
-       🔴 ASID
+       🔴 ACID
       </div>
       <div id="questionText" class="question-text"></div>
       <div id="answerRow" class="answer-row"></div>
      </div><!-- Reset Button -->
-     <div class="reset-container"><button id="resetBtn" class="reset-btn"> 🔄 <span id="resetBtnText">Mula Semula</span> </button>
-     </div><!-- On-Screen Keyboard -->
-     <div class="keyboard">
-      <div class="keyboard-row">
-       <div class="key" data-key="q">
-        q
-       </div>
-       <div class="key" data-key="w">
-        w
-       </div>
-       <div class="key" data-key="e">
-        e
-       </div>
-       <div class="key" data-key="r">
-        r
-       </div>
-       <div class="key" data-key="t">
-        t
-       </div>
-       <div class="key" data-key="y">
-        y
-       </div>
-       <div class="key" data-key="u">
-        u
-       </div>
-       <div class="key" data-key="i">
-        i
-       </div>
-       <div class="key" data-key="o">
-        o
-       </div>
-       <div class="key" data-key="p">
-        p
-       </div>
-      </div>
-      <div class="keyboard-row">
-       <div class="key" data-key="a">
-        a
-       </div>
-       <div class="key" data-key="s">
-        s
-       </div>
-       <div class="key" data-key="d">
-        d
-       </div>
-       <div class="key" data-key="f">
-        f
-       </div>
-       <div class="key" data-key="g">
-        g
-       </div>
-       <div class="key" data-key="h">
-        h
-       </div>
-       <div class="key" data-key="j">
-        j
-       </div>
-       <div class="key" data-key="k">
-        k
-       </div>
-       <div class="key" data-key="l">
-        l
-       </div>
-      </div>
-      <div class="keyboard-row">
-       <div class="key" data-key="z">
-        z
-       </div>
-       <div class="key" data-key="x">
-        x
-       </div>
-       <div class="key" data-key="c">
-        c
-       </div>
-       <div class="key" data-key="v">
-        v
-       </div>
-       <div class="key" data-key="b">
-        b
-       </div>
-       <div class="key" data-key="n">
-        n
-       </div>
-       <div class="key" data-key="m">
-        m
-       </div>
-       <div class="key backspace wide" data-key="backspace">
-        ⌫
-       </div>
-      </div>
-      <div class="keyboard-row">
-       <div class="key space" data-key=" ">
-        space
-       </div>
-      </div>
+     <div class="reset-container"><button id="resetBtn" class="reset-btn"> 🔄 <span id="resetBtnText">Restart</span> </button>
      </div>
     </div>
    </div>
   </div>
   <script>
         const defaultConfig = {
-            main_title: "🧪 Permainan Asid & Alkali 🧪",
-            instruction_text: "Taip jawapan yang betul untuk setiap soalan!",
+            main_title: "🧪 Acid & Alkali Game 🧪",
+            instruction_text: "Type the correct answer for each question!",
             primary_color: "#667eea",
             secondary_color: "#ffffff"
         };
@@ -480,8 +337,8 @@
             { id: 10, question: 'Alkali __________________ with metal', answer: 'does not react', category: 'ALKALI', color: '#3b82f6', emoji: '🔵' }
         ];
 
-        let currentLanguage = 'BM';
-        let allQuestions = allQuestionsBM;
+        let currentLanguage = 'EN';
+        let allQuestions = allQuestionsEN;
 
         let gameState = {
             currentQuestionIndex: 0,
@@ -492,20 +349,20 @@
         };
 
         function toggleLanguage() {
-            if (currentLanguage === 'BM') {
-                currentLanguage = 'EN';
-                allQuestions = allQuestionsEN;
-                document.getElementById('langToggle').innerHTML = '🌐 Bahasa Melayu';
-                document.getElementById('questionLabel').textContent = 'Question';
-                document.getElementById('timeLabel').textContent = '⏱️ Time:';
-                document.getElementById('resetBtnText').textContent = 'Restart';
-            } else {
+            if (currentLanguage === 'EN') {
                 currentLanguage = 'BM';
                 allQuestions = allQuestionsBM;
                 document.getElementById('langToggle').innerHTML = '🌐 English';
                 document.getElementById('questionLabel').textContent = 'Soalan';
                 document.getElementById('timeLabel').textContent = '⏱️ Masa:';
                 document.getElementById('resetBtnText').textContent = 'Mula Semula';
+            } else {
+                currentLanguage = 'EN';
+                allQuestions = allQuestionsEN;
+                document.getElementById('langToggle').innerHTML = '🌐 Bahasa Melayu';
+                document.getElementById('questionLabel').textContent = 'Question';
+                document.getElementById('timeLabel').textContent = '⏱️ Time:';
+                document.getElementById('resetBtnText').textContent = 'Restart';
             }
             initGame();
         }
@@ -900,18 +757,6 @@
             }
         });
 
-        // On-screen keyboard event listeners
-        document.querySelectorAll('.key').forEach(key => {
-            key.addEventListener('click', (e) => {
-                const keyValue = e.target.dataset.key;
-                if (keyValue === 'backspace') {
-                    handleBackspace();
-                } else {
-                    handleKeyPress(keyValue);
-                }
-            });
-        });
-
         if (window.elementSdk) {
             window.elementSdk.init({
                 defaultConfig,
@@ -946,5 +791,5 @@
 
         initGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b252f56a4c63a5f',t:'MTc2NjQ2NDg2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b254002d5de8b74',t:'MTc2NjQ2NTU1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
