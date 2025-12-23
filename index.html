@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
 <html lang="ms" class="h-full">
  <head>
   <meta charset="UTF-8">
@@ -102,35 +102,67 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            gap: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .max-width {
+                gap: 16px;
+            }
+        }
+        
+        .header {
+            flex-shrink: 0;
+        }
+        
+        .progress-section {
+            flex-shrink: 0;
+        }
+        
+        .question-section {
+            flex-shrink: 0;
+        }
+        
+        .keyboard-section {
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+        
+        .reset-section {
+            flex-shrink: 0;
         }
         
         @media (min-width: 1024px) {
             .max-width {
                 display: grid;
-                grid-template-columns: 1fr 250px;
+                grid-template-columns: 1fr 280px;
+                grid-template-rows: auto auto auto 1fr;
                 gap: 20px;
-                align-items: stretch;
             }
-        }
-        
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            flex: 1;
-            overflow-y: auto;
-        }
-        
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        @media (min-width: 1024px) {
-            .right-column {
-                position: sticky;
-                top: 20px;
+            
+            .header {
+                grid-column: 1 / -1;
+            }
+            
+            .progress-section {
+                grid-column: 2;
+                grid-row: 2;
+            }
+            
+            .reset-section {
+                grid-column: 2;
+                grid-row: 3;
+            }
+            
+            .question-section {
+                grid-column: 1;
+                grid-row: 2;
+            }
+            
+            .keyboard-section {
+                grid-column: 1;
+                grid-row: 3;
+                align-self: end;
             }
         }
         
@@ -429,12 +461,12 @@
  <body>
   <div id="app" class="container">
    <div class="content">
-    <div class="max-width"><!-- Left Column (Desktop) / Top Section (Mobile) -->
-     <div class="left-column"><!-- Header -->
-      <div class="header">
-       <h1 id="mainTitle" class="main-title">🧪 Permainan Asid dan Alkali 🧪</h1>
-       <p id="instructionText" class="instruction">Taip jawapan yang betul untuk setiap soalan!</p><button id="langToggle" class="lang-btn"> 🌐 English </button>
-      </div><!-- Progress -->
+    <div class="max-width"><!-- Header -->
+     <div class="header">
+      <h1 id="mainTitle" class="main-title">🧪 Permainan Asid dan Alkali 🧪</h1>
+      <p id="instructionText" class="instruction">Taip jawapan yang betul untuk setiap soalan!</p><button id="langToggle" class="lang-btn"> 🌐 English </button>
+     </div><!-- Progress -->
+     <div class="progress-section">
       <div class="progress-card">
        <div class="progress-header">
         <div class="progress-label" id="questionLabel">
@@ -455,14 +487,18 @@
          0s
         </div>
        </div>
-      </div><!-- Question -->
+      </div>
+     </div><!-- Question -->
+     <div class="question-section">
       <div class="question-card">
        <div id="categoryTitle" class="category-title">
         🔴 ASID
        </div>
        <div id="questionText" class="question-text"></div>
        <div id="answerRow" class="answer-row"></div>
-      </div><!-- Virtual Keyboard -->
+      </div>
+     </div><!-- Virtual Keyboard -->
+     <div class="keyboard-section">
       <div class="keyboard-container">
        <div class="keyboard-row"><button class="key-btn" data-key="q">q</button> <button class="key-btn" data-key="w">w</button> <button class="key-btn" data-key="e">e</button> <button class="key-btn" data-key="r">r</button> <button class="key-btn" data-key="t">t</button> <button class="key-btn" data-key="y">y</button> <button class="key-btn" data-key="u">u</button> <button class="key-btn" data-key="i">i</button> <button class="key-btn" data-key="o">o</button> <button class="key-btn" data-key="p">p</button>
        </div>
@@ -473,8 +509,8 @@
        <div class="keyboard-row"><button class="key-btn space-key" data-key=" ">SPACE</button> <button class="key-btn backspace-key" data-key="backspace">⌫ DELETE</button>
        </div>
       </div>
-     </div><!-- Right Column (Desktop Sidebar) / Bottom Section (Mobile) -->
-     <div class="right-column"><!-- Reset Button -->
+     </div><!-- Reset Button -->
+     <div class="reset-section">
       <div class="reset-container"><button id="resetBtn" class="reset-btn"> 🔄 <span id="resetBtnText">Mula Semula</span> </button>
       </div>
      </div>
@@ -990,5 +1026,5 @@
 
         initGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b25c0ed2104c786',t:'MTc2NjQ3MDgzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b25cc91c2b7c786',t:'MTc2NjQ3MTMwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
