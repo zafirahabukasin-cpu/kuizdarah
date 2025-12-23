@@ -432,13 +432,13 @@
     <div class="max-width"><!-- Left Column (Desktop) / Top Section (Mobile) -->
      <div class="left-column"><!-- Header -->
       <div class="header">
-       <h1 id="mainTitle" class="main-title">🧪 Acid &amp; Alkali Game 🧪</h1>
-       <p id="instructionText" class="instruction">Type the correct answer for each question!</p><button id="langToggle" class="lang-btn"> 🌐 Bahasa Melayu </button>
+       <h1 id="mainTitle" class="main-title">🧪 Permainan Asid dan Alkali 🧪</h1>
+       <p id="instructionText" class="instruction">Taip jawapan yang betul untuk setiap soalan!</p><button id="langToggle" class="lang-btn"> 🌐 English </button>
       </div><!-- Progress -->
       <div class="progress-card">
        <div class="progress-header">
         <div class="progress-label" id="questionLabel">
-         Question
+         Soalan
         </div>
         <div id="progress" class="progress-count">
          1/10
@@ -449,7 +449,7 @@
        </div>
        <div class="timer-row">
         <div class="timer-label" id="timeLabel">
-         ⏱️ Time:
+         ⏱️ Masa:
         </div>
         <div id="timer" class="timer-value">
          0s
@@ -458,7 +458,7 @@
       </div><!-- Question -->
       <div class="question-card">
        <div id="categoryTitle" class="category-title">
-        🔴 ACID
+        🔴 ASID
        </div>
        <div id="questionText" class="question-text"></div>
        <div id="answerRow" class="answer-row"></div>
@@ -475,7 +475,7 @@
       </div>
      </div><!-- Right Column (Desktop Sidebar) / Bottom Section (Mobile) -->
      <div class="right-column"><!-- Reset Button -->
-      <div class="reset-container"><button id="resetBtn" class="reset-btn"> 🔄 <span id="resetBtnText">Restart</span> </button>
+      <div class="reset-container"><button id="resetBtn" class="reset-btn"> 🔄 <span id="resetBtnText">Mula Semula</span> </button>
       </div>
      </div>
     </div>
@@ -515,8 +515,8 @@
             { id: 10, question: 'Alkali __________________ with metal', answer: 'does not react', category: 'ALKALI', color: '#3b82f6', emoji: '🔵' }
         ];
 
-        let currentLanguage = 'EN';
-        let allQuestions = allQuestionsEN;
+        let currentLanguage = 'BM';
+        let allQuestions = allQuestionsBM;
 
         let gameState = {
             currentQuestionIndex: 0,
@@ -527,16 +527,7 @@
         };
 
         function toggleLanguage() {
-            if (currentLanguage === 'EN') {
-                currentLanguage = 'BM';
-                allQuestions = allQuestionsBM;
-                document.getElementById('langToggle').innerHTML = '🌐 English';
-                document.getElementById('mainTitle').textContent = '🧪 Permainan Asid dan Alkali 🧪';
-                document.getElementById('instructionText').textContent = 'Taip jawapan yang betul untuk setiap soalan!';
-                document.getElementById('questionLabel').textContent = 'Soalan';
-                document.getElementById('timeLabel').textContent = '⏱️ Masa:';
-                document.getElementById('resetBtnText').textContent = 'Mula Semula';
-            } else {
+            if (currentLanguage === 'BM') {
                 currentLanguage = 'EN';
                 allQuestions = allQuestionsEN;
                 document.getElementById('langToggle').innerHTML = '🌐 Bahasa Melayu';
@@ -545,6 +536,15 @@
                 document.getElementById('questionLabel').textContent = 'Question';
                 document.getElementById('timeLabel').textContent = '⏱️ Time:';
                 document.getElementById('resetBtnText').textContent = 'Restart';
+            } else {
+                currentLanguage = 'BM';
+                allQuestions = allQuestionsBM;
+                document.getElementById('langToggle').innerHTML = '🌐 English';
+                document.getElementById('mainTitle').textContent = '🧪 Permainan Asid dan Alkali 🧪';
+                document.getElementById('instructionText').textContent = 'Taip jawapan yang betul untuk setiap soalan!';
+                document.getElementById('questionLabel').textContent = 'Soalan';
+                document.getElementById('timeLabel').textContent = '⏱️ Masa:';
+                document.getElementById('resetBtnText').textContent = 'Mula Semula';
             }
             initGame();
         }
@@ -990,5 +990,5 @@
 
         initGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b25bc5773c7c786',t:'MTc2NjQ3MDY0NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b25c0ed2104c786',t:'MTc2NjQ3MDgzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
